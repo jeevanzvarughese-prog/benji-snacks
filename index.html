@@ -1,0 +1,4095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Benji Snacks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<style>
+  :root{
+    --bg:#1F2226; --panel:#2B2E33; --panel-dark:#15171A; --line:#3A3F45;
+    --cream:#EDEAE1; --muted:#8A8578; --muted2:#B7B2A5; --gold:#FFC24B;
+    --sweet:#FF6B7A; --salty:#FFC24B; --drink:#4ECDC4; --healthy:#8BD17C;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background-color:var(--bucs-navy); color:var(--cream); font-family:'Work Sans',-apple-system,Segoe UI,sans-serif;}
+  #site-snackshop{background-color:var(--bg); background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22240%22%20height%3D%22240%22%20viewBox%3D%220%200%20240%20240%22%3E%0A%3Cg%20opacity%3D%220.22%22%3E%0A%20%20%3C%21--%20chip%20bag%20orange%20--%3E%0A%20%20%3Cg%20transform%3D%22translate%285%2C5%29%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M0%2010%20L28%204%20L36%2062%20L-6%2068%20Z%22%20fill%3D%22%23E8912F%22%20stroke%3D%22%23B8681A%22%20stroke-width%3D%221.5%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M0%2010%20Q14%20-2%2028%204%22%20fill%3D%22none%22%20stroke%3D%22%23B8681A%22%20stroke-width%3D%221.5%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M4%2024%20L10%2040%20L18%2024%20Z%22%20fill%3D%22%23FFD166%22/%3E%0A%20%20%3C/g%3E%0A%20%20%3C%21--%20red%20candy%20--%3E%0A%20%20%3Cg%20transform%3D%22translate%2895%2C10%29%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M0%2014%20L18%204%20L18%2024%20L0%2034%20L0%2024%20L-12%2019%20L0%209%20Z%22%20fill%3D%22%23E63946%22%20stroke%3D%22%23A8202C%22%20stroke-width%3D%221.2%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%224%22%20cy%3D%2219%22%20r%3D%223%22%20fill%3D%22%23FFB3BA%22/%3E%0A%20%20%3C/g%3E%0A%20%20%3C%21--%20soda%20can%20red%20--%3E%0A%20%20%3Cg%20transform%3D%22translate%28150%2C20%29%22%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2226%22%20height%3D%2246%22%20rx%3D%227%22%20fill%3D%22%23D62839%22%20stroke%3D%22%238E1B27%22%20stroke-width%3D%221.2%22/%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%2214%22%20width%3D%2226%22%20height%3D%229%22%20fill%3D%22%23F1FAEE%22/%3E%0A%20%20%20%20%3Cellipse%20cx%3D%2213%22%20cy%3D%223%22%20rx%3D%2211%22%20ry%3D%223%22%20fill%3D%22%23B8202E%22/%3E%0A%20%20%3C/g%3E%0A%20%20%3C%21--%20cookie%20--%3E%0A%20%20%3Cg%20transform%3D%22translate%2815%2C90%29%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2220%22%20fill%3D%22%23C68958%22%20stroke%3D%22%239C6B41%22%20stroke-width%3D%221.2%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22-7%22%20cy%3D%22-6%22%20r%3D%222.4%22%20fill%3D%22%235C3A21%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%227%22%20cy%3D%22-3%22%20r%3D%222.4%22%20fill%3D%22%235C3A21%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22-2%22%20cy%3D%228%22%20r%3D%222.4%22%20fill%3D%22%235C3A21%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%228%22%20cy%3D%229%22%20r%3D%222.4%22%20fill%3D%22%235C3A21%22/%3E%0A%20%20%3C/g%3E%0A%20%20%3C%21--%20lollipop%20--%3E%0A%20%20%3Cg%20transform%3D%22translate%2890%2C95%29%22%3E%0A%20%20%20%20%3Cline%20x1%3D%220%22%20y1%3D%2216%22%20x2%3D%220%22%20y2%3D%2245%22%20stroke%3D%22%23E8DCC8%22%20stroke-width%3D%223%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2217%22%20fill%3D%22%23F4A6C1%22%20stroke%3D%22%23C9436C%22%20stroke-width%3D%221.2%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M0%20-17%20A17%2017%200%200%201%2012%20-12%22%20fill%3D%22none%22%20stroke%3D%22%23C9436C%22%20stroke-width%3D%221.2%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M-12%2012%20A17%2017%200%200%201%20-17%200%22%20fill%3D%22none%22%20stroke%3D%22%23C9436C%22%20stroke-width%3D%221.2%22/%3E%0A%20%20%3C/g%3E%0A%20%20%3C%21--%20green%20gummy%20bear%20--%3E%0A%20%20%3Cg%20transform%3D%22translate%28160%2C95%29%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M0%2030%20Q-6%2018%202%2012%20Q10%204%2020%2012%20Q28%2018%2022%2030%20Q26%2044%2012%2047%20Q-2%2050%20-4%2038%20Q-8%2034%200%2030%20Z%22%20fill%3D%22%236FCF97%22%20stroke%3D%22%233E9166%22%20stroke-width%3D%221.2%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%226%22%20cy%3D%2214%22%20r%3D%221.6%22%20fill%3D%22%23215A3C%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2214%22%20cy%3D%2214%22%20r%3D%221.6%22%20fill%3D%22%23215A3C%22/%3E%0A%20%20%3C/g%3E%0A%20%20%3C%21--%20pretzel%20--%3E%0A%20%20%3Cg%20transform%3D%22translate%2830%2C155%29%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M10%2040%20Q-4%2022%2014%2015%20Q32%208%2025%2028%20Q40%2012%2052%2026%20Q58%2038%2040%2044%20Q54%2056%2036%2060%20Q18%2064%2018%2048%20Q6%2058%200%2046%20Q-4%2034%2010%2040%20Z%22%20fill%3D%22%23C98A4B%22%20stroke%3D%22%238F5D2C%22%20stroke-width%3D%221.4%22/%3E%0A%20%20%3C/g%3E%0A%20%20%3C%21--%20popcorn%20box%20--%3E%0A%20%20%3Cg%20transform%3D%22translate%28120%2C160%29%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M0%200%20L34%200%20L28%2038%20L6%2038%20Z%22%20fill%3D%22%23EF4444%22%20stroke%3D%22%23B22222%22%20stroke-width%3D%221.2%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M4%200%20L30%200%20L28%2038%20L6%2038%20Z%22%20fill%3D%22none%22%20stroke%3D%22%23F1FAEE%22%20stroke-width%3D%224%22%20stroke-dasharray%3D%226%206%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2210%22%20cy%3D%22-6%22%20r%3D%225%22%20fill%3D%22%23FFF3B0%22%20stroke%3D%22%23E8B923%22%20stroke-width%3D%221%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2218%22%20cy%3D%22-10%22%20r%3D%225%22%20fill%3D%22%23FFF3B0%22%20stroke%3D%22%23E8B923%22%20stroke-width%3D%221%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2226%22%20cy%3D%22-5%22%20r%3D%225%22%20fill%3D%22%23FFF3B0%22%20stroke%3D%22%23E8B923%22%20stroke-width%3D%221%22/%3E%0A%20%20%3C/g%3E%0A%20%20%3C%21--%20yellow%20candy%20corn%20/%20triangle%20chip%20--%3E%0A%20%20%3Cg%20transform%3D%22translate%28190%2C155%29%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M0%2020%20L10%200%20L20%2020%20Z%22%20fill%3D%22%23FFD166%22%20stroke%3D%22%23E8A93B%22%20stroke-width%3D%221.2%22/%3E%0A%20%20%3C/g%3E%0A%20%20%3C%21--%20blue%20drink%20pouch%20--%3E%0A%20%20%3Cg%20transform%3D%22translate%2860%2C10%29%22%20opacity%3D%220.9%22%3E%0A%20%20%20%20%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2220%22%20height%3D%2226%22%20rx%3D%223%22%20fill%3D%22%234ECDC4%22%20stroke%3D%22%232E9E96%22%20stroke-width%3D%221.2%22/%3E%0A%20%20%20%20%3Crect%20x%3D%227%22%20y%3D%22-6%22%20width%3D%226%22%20height%3D%228%22%20fill%3D%22%232E9E96%22/%3E%0A%20%20%3C/g%3E%0A%3C/g%3E%0A%3C/svg%3E"); background-repeat:repeat; background-size:170px 170px; padding-bottom:110px; min-height:100vh;}
+  button{font-family:inherit; cursor:pointer;}
+  input{font-family:inherit;}
+  @keyframes flash{0%{transform:scale(1);}50%{transform:scale(.94);filter:brightness(1.3);}100%{transform:scale(1);}}
+  @keyframes rise{from{opacity:0; transform:translateY(8px);}to{opacity:1; transform:translateY(0);}}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important; transition:none !important;}}
+
+  .marquee{height:6px; background:linear-gradient(90deg,var(--sweet),var(--gold),var(--drink),var(--healthy));}
+  header{display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1px solid var(--panel); flex-wrap:wrap; gap:10px;}
+  .brand{display:flex; align-items:center; gap:12px;}
+  .logo{width:40px; height:40px; border-radius:8px; background:var(--panel); display:flex; align-items:center; justify-content:center;}
+  .eyebrow{font-size:11px; letter-spacing:.14em; color:var(--muted); font-weight:600; margin-bottom:2px;}
+  h1{margin:0; font-family:'Archivo Black',sans-serif; font-size:24px; letter-spacing:.02em;}
+  .seller-toggle{background:transparent; border:1px solid var(--line); color:var(--muted2); padding:8px 14px; border-radius:999px; font-size:13px;}
+
+  main{padding:20px;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; max-width:900px; margin:0 auto;}
+  .slot{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:6px;}
+  .slot-top{display:flex; justify-content:space-between; align-items:center;}
+  .code-chip{font-family:'IBM Plex Mono',monospace; font-size:12px; background:var(--panel-dark); padding:2px 8px; border-radius:6px; color:var(--muted);}
+  .tag-dot{width:8px; height:8px; border-radius:999px;}
+  .slot-name{font-size:14.5px; font-weight:600; line-height:1.25; min-height:36px;}
+  .slot-price{font-family:'IBM Plex Mono',monospace; font-size:18px; color:var(--gold);}
+  .slot-stock{font-size:11px; color:var(--muted); font-family:'IBM Plex Mono',monospace;}
+  .slot-stock.low{color:var(--sweet);}
+  .press-btn{margin-top:4px; border:none; border-radius:8px; padding:9px 0; font-weight:700; font-size:13px; letter-spacing:.03em; color:#1F2226; background:var(--gold);}
+  .press-btn[disabled]{background:#555; cursor:not-allowed;}
+  .minus-btn{background:none; border:none; color:var(--muted); font-size:12px; text-decoration:underline; padding:0; align-self:flex-start;}
+
+  .tray{position:fixed; bottom:0; left:0; right:0; background:var(--panel-dark); border-top:2px solid var(--line); padding:14px 20px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
+  .tray-info{flex:1; min-width:160px;}
+  .tray-label{font-size:10px; letter-spacing:.14em; color:var(--muted); font-weight:700;}
+  .tray-total{font-family:'IBM Plex Mono',monospace; font-size:20px; color:var(--gold);}
+  .checkout-btn{background:var(--gold); color:#1F2226; border:none; border-radius:999px; padding:12px 22px; font-weight:700; font-size:14px;}
+  .checkout-btn[disabled]{opacity:.4; cursor:not-allowed;}
+
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:24px; max-width:520px; margin:0 auto;}
+  .panel-wide{max-width:760px;}
+  .panel-title{margin:4px 0 16px; font-family:'Archivo Black',sans-serif; font-size:20px;}
+  .receipt{background:var(--panel-dark); border-radius:10px; padding:14px; font-family:'IBM Plex Mono',monospace; font-size:13px; margin-bottom:18px;}
+  .receipt-row{display:flex; justify-content:space-between; padding:3px 0;}
+  .receipt-total{border-top:1px dashed var(--line); padding-top:8px; margin-top:8px;}
+  label.field{display:block; font-size:12px; color:var(--muted); margin-bottom:6px; margin-top:14px;}
+  input.text{width:100%; background:var(--panel-dark); border:1px solid var(--line); border-radius:8px; padding:10px 12px; color:var(--cream); font-size:14px;}
+  .pay-row{display:flex; gap:8px; margin-top:4px; flex-wrap:wrap;}
+  .pay-chip{border:none; border-radius:999px; padding:8px 14px; font-size:13px; font-weight:600; background:var(--panel-dark); color:var(--cream);}
+  .pay-chip.active{background:var(--gold); color:#1F2226;}
+  .checkout-actions{display:flex; justify-content:space-between; margin-top:22px; gap:10px; flex-wrap:wrap;}
+  .ghost-btn{background:transparent; border:1px solid var(--line); color:var(--muted2); border-radius:999px; padding:10px 16px; font-size:13px;}
+  .confirm-btn{background:var(--gold); color:#1F2226; border:none; border-radius:999px; padding:10px 20px; font-weight:700; font-size:13px;}
+  .fineprint{font-size:12px; color:var(--muted); margin-top:14px; line-height:1.5;}
+  .confirm-code{font-family:'IBM Plex Mono',monospace; font-size:40px; letter-spacing:.08em; color:var(--gold); margin:10px 0 16px;}
+  .center{text-align:center;}
+  .hidden{display:none !important;}
+
+
+  :root{
+    --bucs-navy:#0B1F3A; --bucs-navy-deep:#071527; --bucs-orange:#F2792A; --bucs-orange-soft:#F2792A22;
+    --bucs-cream:#F5F1E8;
+  }
+
+  #site-nav{
+    background:var(--bucs-navy-deep); border-bottom:3px solid var(--bucs-orange); padding:12px 20px;
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    position:sticky; top:0; z-index:40;
+  }
+  .site-nav-brand{font-family:'Archivo Black',sans-serif; font-size:15px; color:var(--bucs-orange); letter-spacing:.04em;}
+  .site-nav-links{display:flex; gap:6px; flex-wrap:wrap;}
+  .site-nav-link{
+    background:transparent; border:1px solid rgba(242,121,42,0.4); color:#C9D4E3; border-radius:999px;
+    padding:7px 14px; font-size:12.5px; font-weight:600; cursor:pointer; font-family:inherit;
+  }
+  .site-nav-link.active{background:var(--bucs-orange); color:var(--bucs-navy-deep); border-color:var(--bucs-orange);}
+  .site-page{
+    min-height:calc(100vh - 60px); background-color:var(--bucs-navy);
+    background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22240%22%20height%3D%22240%22%20viewBox%3D%220%200%20240%20240%22%3E%0A%3Cg%20opacity%3D%220.07%22%20fill%3D%22none%22%20stroke%3D%22%23F2792A%22%20stroke-width%3D%222.5%22%3E%0A%20%20%3C%21--%20anchor%20--%3E%0A%20%20%3Cg%20transform%3D%22translate%2820%2C20%29%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2210%22%20cy%3D%224%22%20r%3D%224%22/%3E%0A%20%20%20%20%3Cline%20x1%3D%2210%22%20y1%3D%228%22%20x2%3D%2210%22%20y2%3D%2234%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M0%2020%20H20%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M0%2034%20Q10%2044%2020%2034%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M-4%2034%20L0%2034%20L0%2030%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M24%2034%20L20%2034%20L20%2030%22/%3E%0A%20%20%3C/g%3E%0A%20%20%3C%21--%20ship%27s%20wheel%20--%3E%0A%20%20%3Cg%20transform%3D%22translate%28150%2C20%29%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2218%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%226%22/%3E%0A%20%20%20%20%3Cline%20x1%3D%2220%22%20y1%3D%222%22%20x2%3D%2220%22%20y2%3D%2214%22/%3E%0A%20%20%20%20%3Cline%20x1%3D%2220%22%20y1%3D%2226%22%20x2%3D%2220%22%20y2%3D%2238%22/%3E%0A%20%20%20%20%3Cline%20x1%3D%222%22%20y1%3D%2220%22%20x2%3D%2214%22%20y2%3D%2220%22/%3E%0A%20%20%20%20%3Cline%20x1%3D%2226%22%20y1%3D%2220%22%20x2%3D%2238%22%20y2%3D%2220%22/%3E%0A%20%20%20%20%3Cline%20x1%3D%227%22%20y1%3D%227%22%20x2%3D%2215%22%20y2%3D%2215%22/%3E%0A%20%20%20%20%3Cline%20x1%3D%2225%22%20y1%3D%2225%22%20x2%3D%2233%22%20y2%3D%2233%22/%3E%0A%20%20%20%20%3Cline%20x1%3D%2233%22%20y1%3D%227%22%20x2%3D%2225%22%20y2%3D%2215%22/%3E%0A%20%20%20%20%3Cline%20x1%3D%2215%22%20y1%3D%2225%22%20x2%3D%227%22%20y2%3D%2233%22/%3E%0A%20%20%3C/g%3E%0A%20%20%3C%21--%20compass%20rose%20--%3E%0A%20%20%3Cg%20transform%3D%22translate%2830%2C140%29%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2218%22%20cy%3D%2218%22%20r%3D%2216%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18%204%20L22%2018%20L18%2032%20L14%2018%20Z%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M4%2018%20L18%2014%20L32%2018%20L18%2022%20Z%22%20opacity%3D%220.6%22/%3E%0A%20%20%3C/g%3E%0A%20%20%3C%21--%20ship%20silhouette%20--%3E%0A%20%20%3Cg%20transform%3D%22translate%28140%2C150%29%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M0%2030%20L50%2030%20L42%2042%20L8%2042%20Z%22/%3E%0A%20%20%20%20%3Cline%20x1%3D%2225%22%20y1%3D%2230%22%20x2%3D%2225%22%20y2%3D%222%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M25%204%20L44%2020%20L25%2020%20Z%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M25%2022%20L10%2020%22%20opacity%3D%220.6%22/%3E%0A%20%20%3C/g%3E%0A%3C/g%3E%0A%3C/svg%3E");
+    background-repeat:repeat; background-size:200px 200px;
+  }
+  .site-hero{
+    text-align:center; padding:48px 20px 28px;
+    background:linear-gradient(180deg, rgba(242,121,42,0.14), transparent);
+    border-bottom:1px solid rgba(242,121,42,0.25);
+  }
+  .site-hero h1{font-family:'Archivo Black',sans-serif; font-size:30px; margin:0 0 10px; color:var(--bucs-cream);}
+  .site-hero p{color:#B9C4D6; font-size:14px; max-width:480px; margin:0 auto;}
+  .site-page-inner{max-width:760px; margin:0 auto; padding:20px;}
+  .site-page .panel{background:#12233F; border:1px solid rgba(242,121,42,0.3);}
+  .site-page .eyebrow{color:var(--bucs-orange);}
+  .site-page .panel-title{color:var(--bucs-cream);}
+  .site-list-item{padding:14px 0; border-bottom:1px solid rgba(242,121,42,0.2);}
+  .site-list-item:last-child{border-bottom:none;}
+  .site-list-title{font-weight:700; font-size:15px; margin-bottom:3px; color:var(--bucs-cream);}
+  .site-list-meta{font-size:12px; color:var(--bucs-orange); margin-bottom:6px;}
+  .site-list-body{font-size:13.5px; color:#B9C4D6; line-height:1.5; white-space:pre-wrap;}
+  .officer-card{display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--line);}
+  .officer-card:last-child{border-bottom:none;}
+  .officer-avatar{width:48px; height:48px; border-radius:999px; background:var(--bucs-orange); color:var(--bucs-navy-deep); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; flex-shrink:0;}
+  .error-text{color:var(--sweet); font-size:12px; margin-top:6px; display:none;}
+  .pw-wrap{position:relative;}
+  .show-toggle{position:absolute; right:6px; top:50%; transform:translateY(-50%); background:transparent; border:none; color:var(--muted); font-size:12px; font-weight:600; padding:6px 8px;}
+  .order-row{display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--line); gap:10px; flex-wrap:wrap;}
+  .flyer-thumb{width:44px; height:44px; border-radius:6px; object-fit:cover; background:var(--panel-dark); border:1px solid var(--line); flex-shrink:0;}
+  .flyer-file-icon{width:44px; height:44px; border-radius:6px; background:var(--panel-dark); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--muted); flex-shrink:0; font-weight:700;}
+  .order-status-pending{color:var(--gold);}
+  .order-status-fulfilled{color:var(--healthy);}
+  .dash-head{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;}
+  .dash-tab-btn.active{background:var(--gold); color:#1F2226; border-color:var(--gold);}
+  #tab-operations, #tab-accounting, #tab-marketing, #tab-teamchat{display:none;}
+  .chat-bubble{background:var(--panel-dark); border:1px solid var(--line); border-radius:10px; padding:10px 12px; max-width:80%;}
+  .chat-bubble-mine{align-self:flex-end; background:rgba(255,194,75,0.12); border-color:rgba(255,194,75,0.4);}
+  .chat-sender{font-size:12px; font-weight:700; color:var(--gold); margin-bottom:2px;}
+  .chat-text{font-size:14px; color:var(--cream); white-space:pre-wrap; word-break:break-word;}
+  .chat-time{font-size:10px; color:var(--muted); margin-top:4px;}
+  .chat-image{max-width:220px; max-height:220px; border-radius:8px; display:block; margin-top:4px; cursor:pointer; border:1px solid var(--line);}
+  .call-tile{position:relative; background:#000; border-radius:8px; overflow:hidden; min-height:56px;}
+  .call-tile video{width:100%; display:block; max-height:180px; object-fit:cover;}
+  .call-tile-label{position:absolute; bottom:4px; left:6px; font-size:11px; color:#fff; background:rgba(0,0,0,0.5); padding:2px 8px; border-radius:999px; font-weight:600;}
+  .call-tile-audio-only{display:flex; align-items:center; padding:10px 12px; min-height:0;}
+  .call-tile-audio-only .call-tile-label{position:static; background:none; padding:0; color:var(--cream);}
+  .pickup-banner{max-width:900px; margin:0 auto 14px; background:linear-gradient(90deg, rgba(255,194,75,0.14), rgba(255,194,75,0.04)); border:1px solid rgba(255,194,75,0.4); border-radius:12px; padding:12px 16px; font-size:14px; font-weight:600; display:flex; flex-direction:column; gap:6px;}
+  .grid-banner{grid-column:1/-1; background:linear-gradient(90deg, rgba(255,194,75,0.18), rgba(255,194,75,0.05)); border:1px solid rgba(255,194,75,0.45); border-radius:12px; padding:12px 16px; font-size:14px; font-weight:600; text-align:center;}
+  .stock-row{display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--line); gap:10px; flex-wrap:wrap;}
+  .stock-name{font-weight:600; font-size:14px;}
+  .stock-price{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--gold);}
+  .stock-input-wrap{display:flex; align-items:center; gap:8px;}
+  .stock-input{width:70px; background:var(--panel-dark); border:1px solid var(--line); border-radius:8px; padding:8px 10px; color:var(--cream); font-size:14px; font-family:'IBM Plex Mono',monospace; text-align:center;}
+  .stock-save-btn{background:var(--gold); color:#1F2226; border:none; border-radius:999px; padding:8px 14px; font-weight:700; font-size:12px;}
+  .stock-saved{color:var(--healthy); font-size:12px; font-weight:600;}
+  .stat-block{min-width:100px;}
+  .goal-track{height:10px; border-radius:5px; background:var(--panel-dark); overflow:hidden; margin:8px 0;}
+  .goal-fill{height:100%; background:linear-gradient(90deg,#8BD17C,#6FBF5E); transition:width .3s ease;}
+  .goal-fill.behind{background:linear-gradient(90deg,var(--gold),#E8A93B);}
+  .stat-num{font-family:'IBM Plex Mono',monospace; font-size:24px; color:var(--gold); font-weight:700;}
+  .stat-label{font-size:11px; color:var(--muted); letter-spacing:.06em; text-transform:uppercase;}
+  .low-stock-row{display:flex; justify-content:space-between; padding:6px 0; font-size:13px; border-bottom:1px solid var(--line);}
+</style>
+</head>
+<body>
+
+<div class="marquee"></div>
+<header>
+  <div class="brand">
+    <div class="logo">
+      <svg width="18" height="26" viewBox="0 0 18 26" fill="none">
+        <rect x="1" y="1" width="16" height="24" rx="3" stroke="#3A3F45" stroke-width="2" />
+        <rect x="6" y="6" width="6" height="14" rx="2" fill="#1F2226" />
+      </svg>
+    </div>
+    <div>
+      <div class="eyebrow">ROW 4 · LOCKER BAY</div>
+      <h1>BENJI SNACKS</h1>
+    </div>
+  </div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    <button class="seller-toggle" id="policy-toggle">Policy</button>
+    <button class="seller-toggle" id="members-toggle">Members</button>
+    <button class="seller-toggle" id="accounting-toggle">Accounting</button>
+    <button class="seller-toggle" id="seller-toggle">Owner dashboard</button>
+  </div>
+</header>
+
+<div id="policy-modal-overlay" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:60; display:flex; align-items:center; justify-content:center; padding:20px;">
+  <div class="panel" style="max-width:480px; width:100%; max-height:80vh; overflow-y:auto;">
+    <div class="eyebrow">ORDER &amp; PICKUP POLICY</div>
+    <h2 class="panel-title">Please read before ordering</h2>
+    <div style="font-size:14px; line-height:1.6; color:var(--muted2); margin-top:12px;">
+      <p><strong style="color:var(--cream);">If you don't pick up your order:</strong><br/>
+      Orders not picked up within 48 hours are considered forfeited. Card payments are not refunded for uncollected orders.</p>
+      <p><strong style="color:var(--cream);">If we can't fulfill your order:</strong><br/>
+      If an item goes out of stock after ordering, you'll be offered a substitute of equal value or a refund.</p>
+      <p><strong style="color:var(--cream);">Payment disputes:</strong><br/>
+      Card disputes go through Stripe's own process. Cash/Venmo issues are resolved directly with the seller.</p>
+      <p><strong style="color:var(--cream);">Not covered:</strong><br/>
+      Items lost or damaged after pickup, allergic reactions, or delays caused by school schedule changes.</p>
+    </div>
+    <button class="confirm-btn" id="close-policy-btn" style="margin-top:16px; width:100%;">Got it</button>
+  </div>
+</div>
+
+<main id="shop-view">
+  <div id="pickup-banner-regular" class="pickup-banner hidden"></div>
+  <div style="max-width:900px; margin:0 auto 14px; display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;">
+    <div id="shop-discount-badge" class="hidden" style="font-size:13px; color:var(--healthy); font-weight:600; align-self:center;"></div>
+    <button class="ghost-btn" id="open-redeem-btn">🏷 Redeem code</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<main id="checkout-view" class="hidden">
+  <div class="panel">
+    <div class="eyebrow">CONFIRM SELECTION</div>
+    <h2 class="panel-title">Your order</h2>
+    <div class="receipt" id="receipt"></div>
+
+    <label class="field">Your name <span style="color:var(--sweet)">*</span></label>
+    <input class="text" id="buyer-name" placeholder="Required — so the seller knows who to give it to" />
+    <div class="error-text" id="name-error">Please enter your name to place an order.</div>
+
+    <label class="field">How you'll pay</label>
+    <div class="pay-row" id="pay-row">
+      <button class="pay-chip active" data-pay="Venmo">Venmo</button>
+      <button class="pay-chip" data-pay="Cash App">Cash App</button>
+      <button class="pay-chip" data-pay="Cash">Cash</button>
+    </div>
+
+    <label class="field">Discount code (optional)</label>
+    <div style="display:flex; gap:8px;">
+      <input class="text" id="discount-code-input" placeholder="e.g. FIRST10" style="flex:1; text-transform:uppercase;" />
+      <button class="ghost-btn" id="apply-discount-btn">Apply</button>
+    </div>
+    <div class="error-text" id="discount-error">That code isn't valid.</div>
+    <div id="discount-applied" style="display:none; font-size:13px; color:var(--healthy); font-weight:600; margin-top:6px;"></div>
+
+    <div class="checkout-actions">
+      <button class="ghost-btn" id="back-btn">← Edit selection</button>
+      <button class="confirm-btn" id="place-order-btn">Place order</button>
+    </div>
+    <button class="confirm-btn" id="pay-card-btn" style="width:100%; margin-top:10px; background:#635BFF;">💳 Pay with card</button>
+    <div id="card-pay-status" style="display:none; font-size:12px; color:var(--muted); margin-top:8px;"></div>
+    <p class="fineprint">This reserves your items — bring payment when you pick up, or pay by card now above. <a href="#" class="checkout-policy-link" style="color:var(--gold);">See order policy</a></p>
+  </div>
+</main>
+
+<main id="done-view" class="hidden">
+  <div class="panel center">
+    <div class="eyebrow">ORDER PLACED</div>
+    <div class="confirm-code" id="confirm-code"></div>
+    <p class="fineprint" id="confirm-summary"></p>
+    <button class="ghost-btn" id="resend-email-btn" style="margin-bottom:10px;">Open email again</button>
+    <div><button class="confirm-btn" id="new-order-btn">Place another order</button></div>
+  </div>
+</main>
+
+<main id="login-view" class="hidden">
+  <div class="panel center">
+    <div class="eyebrow">OWNER ONLY</div>
+    <h2 class="panel-title">Enter password</h2>
+    <div class="pw-wrap">
+      <input class="text" id="pw-input" type="password" placeholder="Password" style="padding-right:60px;" />
+      <button class="show-toggle" id="pw-toggle" type="button">Show</button>
+    </div>
+    <div class="error-text" id="pw-error">Incorrect password.</div>
+    <button class="confirm-btn" id="pw-enter-btn" style="margin-top:12px;">Enter</button>
+  </div>
+</main>
+
+<main id="accounting-login-view" class="hidden">
+  <div class="panel center">
+    <div class="eyebrow">ACCOUNTING ONLY</div>
+    <h2 class="panel-title">Enter password</h2>
+    <div class="pw-wrap">
+      <input class="text" id="acct-pw-input" type="password" placeholder="Password" style="padding-right:60px;" />
+      <button class="show-toggle" id="acct-pw-toggle" type="button">Show</button>
+    </div>
+    <div class="error-text" id="acct-pw-error">Incorrect password.</div>
+    <button class="confirm-btn" id="acct-pw-enter-btn" style="margin-top:12px;">Enter</button>
+    <p class="fineprint">This login only shows sales, expenses, and orders — not inventory or member controls.</p>
+  </div>
+</main>
+
+<main id="members-login-view" class="hidden">
+  <div class="panel center">
+    <div class="eyebrow">MEMBERS ONLY</div>
+    <h2 class="panel-title">Enter your member code</h2>
+    <input class="text" id="member-code-input" placeholder="e.g. SNAK7X" style="text-transform:uppercase;" />
+    <div class="error-text" id="member-code-error">That code isn't recognized — ask the seller for one.</div>
+    <button class="confirm-btn" id="member-code-enter-btn" style="margin-top:12px;">Enter</button>
+    <p class="fineprint">Don't have a code? <a href="#" id="go-buy-membership-link" style="color:var(--gold);">Buy a membership</a></p>
+  </div>
+</main>
+
+<main id="buy-membership-view" class="hidden">
+  <div class="panel center">
+    <div class="eyebrow">MEMBERSHIP</div>
+    <h2 class="panel-title">Buy a membership</h2>
+    <p class="fineprint" style="margin-top:0;">Membership price: <strong id="membership-price-display" style="color:var(--cream);">$5.00</strong> — unlocks the premium item selection.</p>
+
+    <label class="field">Your name <span style="color:var(--sweet)">*</span></label>
+    <input class="text" id="membership-name-input" placeholder="So the seller knows who paid" />
+    <div class="error-text" id="membership-name-error">Please enter your name.</div>
+
+    <label class="field">How you'll pay</label>
+    <div class="pay-row" id="membership-pay-row">
+      <button class="pay-chip active" data-pay="Venmo">Venmo</button>
+      <button class="pay-chip" data-pay="Cash App">Cash App</button>
+      <button class="pay-chip" data-pay="Cash">Cash</button>
+    </div>
+
+    <div class="checkout-actions">
+      <button class="ghost-btn" id="membership-back-btn">← Back</button>
+      <button class="confirm-btn" id="membership-submit-btn">Request membership</button>
+    </div>
+    <p class="fineprint">Send payment to the seller, then wait for them to approve — they'll give you your member code once payment is confirmed.</p>
+  </div>
+</main>
+
+<main id="membership-requested-view" class="hidden">
+  <div class="panel center">
+    <div class="eyebrow">REQUEST SENT</div>
+    <h2 class="panel-title">Waiting for approval</h2>
+    <p class="fineprint">Once the seller confirms your payment, ask them for your member code.</p>
+    <button class="confirm-btn" id="membership-requested-back-btn" style="margin-top:12px;">← Back to machine</button>
+  </div>
+</main>
+
+<main id="members-shop-view" class="hidden">
+  <div style="max-width:900px; margin:0 auto 14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+    <div>
+      <div class="eyebrow">MEMBER STOCK · <span id="member-welcome"></span></div>
+      <h2 class="panel-title" style="margin:2px 0 0;">Premium selection</h2>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+      <div id="member-shop-discount-badge" class="hidden" style="font-size:13px; color:var(--healthy); font-weight:600;"></div>
+      <button class="ghost-btn" id="member-open-redeem-btn">🏷 Redeem code</button>
+      <button class="ghost-btn" id="member-open-chat-btn">💬 Chat with owners</button>
+      <button class="ghost-btn" id="members-exit-btn">← Back to machine</button>
+    </div>
+  </div>
+  <div id="pickup-banner-member" class="pickup-banner hidden" style="max-width:900px; margin:0 auto 14px;"></div>
+  <div class="grid" id="member-grid"></div>
+</main>
+
+<div id="member-chat-overlay" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:65; display:flex; align-items:center; justify-content:center; padding:16px;">
+  <div class="panel" style="max-width:800px; width:100%; height:90vh; display:flex; flex-direction:column;">
+    <div class="eyebrow">CHAT WITH OWNERS</div>
+    <h2 class="panel-title">Message the seller directly</h2>
+    <div id="member-chat-messages" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px; padding:8px; margin:12px 0; font-size:16px;"></div>
+    <div style="display:flex; gap:8px;">
+      <input class="text" id="member-chat-input" placeholder="Type a message…" style="flex:1; font-size:16px; padding:14px;" />
+      <button class="confirm-btn" id="member-chat-send-btn" style="padding:14px 24px;">Send</button>
+    </div>
+    <button class="ghost-btn" id="member-chat-close-btn" style="margin-top:10px; width:100%;">Close</button>
+  </div>
+</div>
+
+<main id="members-checkout-view" class="hidden">
+  <div class="panel">
+    <div class="eyebrow">CONFIRM SELECTION</div>
+    <h2 class="panel-title">Your premium order</h2>
+    <div class="receipt" id="member-receipt"></div>
+
+    <label class="field">How you'll pay</label>
+    <div class="pay-row" id="member-pay-row">
+      <button class="pay-chip active" data-pay="Venmo">Venmo</button>
+      <button class="pay-chip" data-pay="Cash App">Cash App</button>
+      <button class="pay-chip" data-pay="Cash">Cash</button>
+    </div>
+
+    <label class="field">Discount code (optional)</label>
+    <div style="display:flex; gap:8px;">
+      <input class="text" id="member-discount-code-input" placeholder="e.g. FIRST10" style="flex:1; text-transform:uppercase;" />
+      <button class="ghost-btn" id="member-apply-discount-btn">Apply</button>
+    </div>
+    <div class="error-text" id="member-discount-error">That code isn't valid.</div>
+    <div id="member-discount-applied" style="display:none; font-size:13px; color:var(--healthy); font-weight:600; margin-top:6px;"></div>
+
+    <div class="checkout-actions">
+      <button class="ghost-btn" id="member-back-btn">← Edit selection</button>
+      <button class="confirm-btn" id="member-place-order-btn">Place order</button>
+    </div>
+    <button class="confirm-btn" id="member-pay-card-btn" style="width:100%; margin-top:10px; background:#635BFF;">💳 Pay with card</button>
+    <div id="member-card-pay-status" style="display:none; font-size:12px; color:var(--muted); margin-top:8px;"></div>
+    <p class="fineprint">This reserves your items — bring payment when you pick up, or pay by card now above. <a href="#" class="checkout-policy-link" style="color:var(--gold);">See order policy</a></p>
+  </div>
+</main>
+
+<main id="members-done-view" class="hidden">
+  <div class="panel center">
+    <div class="eyebrow">ORDER PLACED</div>
+    <div class="confirm-code" id="member-confirm-code"></div>
+    <p class="fineprint" id="member-confirm-summary"></p>
+    <button class="ghost-btn" id="member-resend-email-btn" style="margin-bottom:10px;">Open email again</button>
+    <div><button class="confirm-btn" id="member-new-order-btn">Place another order</button></div>
+  </div>
+</main>
+
+<main id="dashboard-view" class="hidden">
+  <div class="panel panel-wide" id="dash-tabs-wrap" style="padding:14px 16px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="ghost-btn dash-tab-btn" data-tab="operations">Operations</button>
+        <button class="ghost-btn dash-tab-btn" data-tab="accounting">Accounting</button>
+        <button class="ghost-btn dash-tab-btn" data-tab="marketing">Marketing</button>
+        <button class="ghost-btn dash-tab-btn" data-tab="teamchat">Team Chat</button>
+      </div>
+      <button class="ghost-btn" id="dash-back-btn">← Back to machine</button>
+    </div>
+  </div>
+
+  <div id="tab-operations">
+    <div class="panel panel-wide" id="low-stock-panel" style="margin-top:16px; display:none;">
+      <div class="eyebrow" style="color:var(--sweet);">LOW STOCK</div>
+      <div id="low-stock-list" style="margin-top:6px;"></div>
+    </div>
+
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="dash-head">
+        <div>
+          <div class="eyebrow">ALL ORDERS</div>
+          <h2 class="panel-title" id="dash-title">Loading…</h2>
+        </div>
+        <button class="ghost-btn" id="export-orders-btn">Export CSV</button>
+      </div>
+      <div id="orders-list"></div>
+    </div>
+
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">PICKUP LOCATION</div>
+      <h2 class="panel-title">Where approved orders get picked up</h2>
+      <p class="fineprint" style="margin-top:0;">Shown to a customer the moment you approve their order. Edit any time — it updates instantly for anyone already waiting.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <input class="text" id="pickup-location-input" placeholder="e.g. Locker Bay Row 4, Room 210" style="flex:1; min-width:220px;" />
+        <button class="confirm-btn" id="save-pickup-location-btn">Save</button>
+      </div>
+    </div>
+
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">BANNERS</div>
+      <h2 class="panel-title">Pickup time, location, or any announcement</h2>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <input class="text" id="new-banner-input" placeholder="e.g. Pickup at 3:15 PM, Locker Bay Row 4" style="flex:1; min-width:220px;" />
+        <button class="confirm-btn" id="add-banner-btn">+ Add banner</button>
+      </div>
+      <p class="fineprint">Every banner you add shows at the top of the shop and members page for everyone, live. Add as many as you need, remove them any time.</p>
+      <div id="banners-list" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">MEMBERSHIP</div>
+      <h2 class="panel-title">Membership requests &amp; price</h2>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <span style="font-size:13px; color:var(--muted2);">Price:</span>
+        <span style="font-size:13px; color:var(--muted);">$</span>
+        <input type="number" min="0" step="0.50" class="stock-input" id="membership-price-input" style="width:80px;" />
+        <button class="ghost-btn" id="membership-price-save-btn">Save price</button>
+      </div>
+      <p class="fineprint" style="margin-top:10px;">Pending requests below — approve once you've received payment to generate their member code.</p>
+      <div id="membership-requests-list" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">MEMBER ACCESS</div>
+      <h2 class="panel-title">Add or remove members</h2>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <input class="text" id="new-member-name" placeholder="Classmate's name" style="flex:1; min-width:180px;" />
+        <input class="text" id="new-member-phone" placeholder="Phone number (optional)" style="flex:1; min-width:140px;" />
+        <select id="new-member-carrier" class="text" style="flex:1; min-width:130px; -webkit-appearance:menulist; appearance:menulist;">
+          <option value="">Carrier (to text)</option>
+          <option value="txt.att.net">AT&T</option>
+          <option value="vtext.com">Verizon</option>
+          <option value="tmomail.net">T-Mobile</option>
+          <option value="messaging.sprintpcs.com">Sprint</option>
+          <option value="sms.myboostmobile.com">Boost Mobile</option>
+          <option value="sms.cricketwireless.net">Cricket</option>
+          <option value="msg.fi.google.com">Google Fi</option>
+          <option value="mymetropcs.com">Metro by T-Mobile</option>
+          <option value="email.uscc.net">US Cellular</option>
+        </select>
+        <button class="confirm-btn" id="add-member-btn">Generate code</button>
+      </div>
+      <p class="fineprint">Copy the code and send it to them directly. Revoking a code locks that person out immediately without affecting anyone else. Add a phone + carrier to enable texting them directly.</p>
+      <div id="members-list" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">INVENTORY</div>
+      <h2 class="panel-title">Stock on hand</h2>
+      <p class="fineprint" style="margin-top:0;">Update counts as you restock or sell out. Changes go live for everyone right away.</p>
+      <button class="ghost-btn" id="reset-regular-btn">Reset machine items to code list</button>
+
+      <div style="font-size:12px; color:var(--muted); font-weight:700; letter-spacing:.08em; margin-top:16px;">MACHINE ITEMS</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin:10px 0;">
+        <input class="text" id="new-item-name-regular" placeholder="New item name" style="flex:1; min-width:120px;" />
+        <input type="number" min="0" step="0.25" class="stock-input" id="new-item-price-regular" placeholder="$" style="width:70px;" />
+        <input type="number" min="0" class="stock-input" id="new-item-stock-regular" placeholder="Stock" style="width:70px;" />
+        <button class="confirm-btn" id="add-item-regular-btn">+ Add item</button>
+      </div>
+      <div id="stock-list-regular"></div>
+
+      <div style="font-size:12px; color:var(--muted); font-weight:700; letter-spacing:.08em; margin-top:20px;">MEMBER ITEMS</div>
+      <button class="ghost-btn" id="reset-member-btn" style="margin-top:10px;">Reset member items to code list</button>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin:10px 0;">
+        <input class="text" id="new-item-name-member" placeholder="New item name" style="flex:1; min-width:120px;" />
+        <input type="number" min="0" step="0.25" class="stock-input" id="new-item-price-member" placeholder="$" style="width:70px;" />
+        <input type="number" min="0" class="stock-input" id="new-item-stock-member" placeholder="Stock" style="width:70px;" />
+        <button class="confirm-btn" id="add-item-member-btn">+ Add item</button>
+      </div>
+      <div id="stock-list-member"></div>
+    </div>
+
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">CLIENT LOG</div>
+      <h2 class="panel-title">Contacts</h2>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <input class="text" id="new-client-name" placeholder="Name" style="flex:1; min-width:140px;" />
+        <input class="text" id="new-client-phone" placeholder="Phone number" style="flex:1; min-width:140px;" />
+        <select id="new-client-carrier" class="text" style="flex:1; min-width:130px; -webkit-appearance:menulist; appearance:menulist;">
+          <option value="">Carrier (to text)</option>
+          <option value="txt.att.net">AT&T</option>
+          <option value="vtext.com">Verizon</option>
+          <option value="tmomail.net">T-Mobile</option>
+          <option value="messaging.sprintpcs.com">Sprint</option>
+          <option value="sms.myboostmobile.com">Boost Mobile</option>
+          <option value="sms.cricketwireless.net">Cricket</option>
+          <option value="msg.fi.google.com">Google Fi</option>
+          <option value="mymetropcs.com">Metro by T-Mobile</option>
+          <option value="email.uscc.net">US Cellular</option>
+        </select>
+        <input class="text" id="new-client-note" placeholder="Note (optional)" style="flex:1; min-width:140px;" />
+        <button class="confirm-btn" id="add-client-btn">Add contact</button>
+      </div>
+      <p class="fineprint">Add a carrier to send this contact a free text from your computer via carrier email gateway.</p>
+      <div id="clients-list" style="margin-top:14px;"></div>
+    </div>
+  </div>
+
+  <div id="tab-accounting">
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">SALES SUMMARY</div>
+      <div id="sales-summary" style="display:flex; gap:24px; flex-wrap:wrap; margin-top:8px;"></div>
+      <div style="border-top:1px dashed var(--line); margin-top:14px; padding-top:14px;">
+        <div id="profit-summary" style="display:flex; gap:24px; flex-wrap:wrap;"></div>
+      </div>
+    </div>
+
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">RETAIL &amp; UNIT PRICES</div>
+      <h2 class="panel-title">What things cost you vs. what they sell for</h2>
+      <p class="fineprint" style="margin-top:0;">Retail price is set in Owner dashboard → Inventory. Unit cost (what you paid per item) is editable right here — margin updates automatically.</p>
+      <div style="font-size:12px; color:var(--muted); font-weight:700; letter-spacing:.08em; margin-top:12px;">MACHINE ITEMS</div>
+      <div id="retail-prices-regular" style="margin-top:6px;"></div>
+      <div style="font-size:12px; color:var(--muted); font-weight:700; letter-spacing:.08em; margin-top:20px;">MEMBER ITEMS</div>
+      <div id="retail-prices-member" style="margin-top:6px;"></div>
+    </div>
+
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">PROFIT TRACKER</div>
+      <h2 class="panel-title">Real profit, based on what things actually cost</h2>
+      <p class="fineprint" style="margin-top:0;">Calculated from real sales × unit cost above (test orders excluded). Updates live as orders come in or unit costs change.</p>
+      <div id="profit-tracker-summary" style="display:flex; gap:24px; flex-wrap:wrap; margin-top:10px;"></div>
+      <div style="font-size:12px; color:var(--muted); font-weight:700; letter-spacing:.08em; margin-top:18px;">PROFIT BY ITEM</div>
+      <div id="profit-tracker-list" style="margin-top:6px;"></div>
+    </div>
+
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">PROFIT GOALS</div>
+      <h2 class="panel-title">Set a target and track progress toward it</h2>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <input class="text" id="goal-label" placeholder="What's it for? (e.g. New phone)" style="flex:1; min-width:160px;" />
+        <input type="number" min="0" step="0.01" class="stock-input" id="goal-amount" placeholder="Target $" style="width:110px;" />
+        <input type="date" id="goal-deadline" class="text" style="width:150px;" />
+        <button class="confirm-btn" id="save-goal-btn">Set goal</button>
+        <button class="ghost-btn" id="clear-goal-btn">Clear</button>
+      </div>
+      <p class="fineprint" style="margin-top:8px;">Progress is measured from the day you set the goal, using real profit (same numbers as above).</p>
+      <div id="goal-progress" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="dash-head">
+        <div>
+          <div class="eyebrow">EXPENSES</div>
+          <h2 class="panel-title" style="margin:2px 0 0;">Log restock costs</h2>
+        </div>
+        <button class="ghost-btn" id="export-expenses-btn">Export CSV</button>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;">
+        <input class="text" id="new-expense-desc" placeholder="What did you buy? (e.g. Costco run)" style="flex:1; min-width:160px;" />
+        <input type="number" min="0" step="0.01" class="stock-input" id="new-expense-amount" placeholder="$" style="width:90px;" />
+        <button class="confirm-btn" id="add-expense-btn">+ Log expense</button>
+      </div>
+      <div id="expenses-list" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">REVENUE SPLIT</div>
+      <h2 class="panel-title">Divide earnings by share</h2>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <span style="font-size:13px; color:var(--muted2);">$</span>
+        <input type="number" min="0" step="0.01" class="stock-input" id="split-revenue-input" value="0" style="width:110px;" />
+        <button class="ghost-btn" id="split-use-today-btn">Use today's sales</button>
+        <button class="ghost-btn" id="split-use-alltime-btn">Use all-time sales</button>
+      </div>
+      <div id="split-people-list" style="margin-top:12px;"></div>
+      <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
+        <button class="ghost-btn" id="split-add-person-btn">+ Add person</button>
+        <button class="ghost-btn" id="split-even-btn">Split evenly</button>
+        <button class="confirm-btn" id="split-save-btn">Save</button>
+      </div>
+      <div id="split-status" style="margin-top:12px; font-size:13px; font-weight:600;"></div>
+      <div id="split-saved-status" style="margin-top:6px; font-size:12px; color:var(--healthy); font-weight:600; display:none;">✓ Saved</div>
+    </div>
+  </div>
+
+  <div id="tab-marketing">
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">BEST SELLERS</div>
+      <h2 class="panel-title">What's actually moving</h2>
+      <div id="best-sellers-list" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">DISCOUNT CODES</div>
+      <h2 class="panel-title">Create a promo code</h2>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <input class="text" id="new-discount-code" placeholder="CODE (e.g. FIRST10)" style="flex:1; min-width:140px; text-transform:uppercase;" />
+        <input type="number" min="1" max="90" class="stock-input" id="new-discount-pct" placeholder="% off" style="width:80px;" />
+        <button class="confirm-btn" id="add-discount-btn">+ Create code</button>
+      </div>
+      <p class="fineprint">Classmates enter this at checkout to knock a percentage off their total. Usage count shown below.</p>
+      <div id="discount-codes-list" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">FLYER</div>
+      <h2 class="panel-title">Printable flyer</h2>
+      <p class="fineprint" style="margin-top:0;">Builds a print-ready flyer from your current machine inventory and prices — opens in a new tab, print or save as PDF from there.</p>
+      <button class="confirm-btn" id="generate-flyer-btn">Generate flyer</button>
+    </div>
+
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">STORED FLYERS</div>
+      <h2 class="panel-title">Pre-made files</h2>
+      <p class="fineprint" style="margin-top:0;">Upload finished flyers, posters, or graphics (images or PDFs) here so the marketing team has one shared place to grab them.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <input type="file" id="flyer-file-input" accept="image/*,.pdf" style="flex:1; min-width:200px; color:var(--cream); font-size:13px;" />
+        <button class="confirm-btn" id="upload-flyer-btn">Upload</button>
+      </div>
+      <div id="flyer-upload-status" style="font-size:12px; color:var(--muted); margin-top:8px; display:none;"></div>
+      <div id="stored-flyers-list" style="margin-top:14px;"></div>
+    </div>
+  </div>
+
+  <div id="tab-teamchat">
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">VOICE &amp; VIDEO CALL</div>
+      <h2 class="panel-title">Call a teammate — free, right from the browser</h2>
+      <p class="fineprint" style="margin-top:0;">Both people need to be logged into the Owner dashboard. Once logged in, you'll get an incoming call popup anywhere in the app, not just here. Allow mic/camera access when asked.</p>
+      <div id="call-idle-view" style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="confirm-btn" id="start-call-btn">📞 Voice call</button>
+        <button class="confirm-btn" id="start-video-call-btn">🎥 Video call</button>
+      </div>
+    </div>
+
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">TEAM CHAT</div>
+      <h2 class="panel-title">Talk to the team</h2>
+      <p class="fineprint" style="margin-top:0;">Only visible to people logged into the Owner dashboard. Updates live for everyone.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:14px;">
+        <span style="font-size:13px; color:var(--muted2);">Posting as:</span>
+        <input class="text" id="chat-sender-name" placeholder="Your name" style="flex:1; min-width:140px;" />
+        <button class="ghost-btn" id="chat-notif-btn">🔔 Enable notifications</button>
+      </div>
+      <div id="chat-messages" style="max-height:420px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; padding:4px; margin-bottom:14px;"></div>
+      <div id="chat-image-status" style="font-size:12px; color:var(--muted); margin-bottom:8px; display:none;"></div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <input class="text" id="chat-message-input" placeholder="Type a message…" style="flex:1; min-width:200px;" />
+        <input type="file" id="chat-image-input" accept="image/*" class="hidden" />
+        <button class="ghost-btn" id="chat-image-btn" title="Send an image">📷</button>
+        <button class="confirm-btn" id="chat-send-btn">Send</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="call-incoming-overlay" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:80; display:flex; align-items:center; justify-content:center; padding:20px;">
+  <div class="panel" style="max-width:340px; width:100%; text-align:center;">
+    <div class="eyebrow">CALL IN PROGRESS</div>
+    <div style="font-weight:700; font-size:18px; margin:10px 0;"><span id="incoming-call-icon">📞</span> <span id="incoming-caller-name">Someone</span> started a call</div>
+    <div style="display:flex; gap:10px; justify-content:center; margin-top:14px;">
+      <button class="confirm-btn" id="accept-call-btn">Join</button>
+      <button class="ghost-btn" id="decline-call-btn">Not now</button>
+    </div>
+  </div>
+</div>
+
+<div id="call-active-overlay" class="hidden" style="position:fixed; bottom:16px; right:16px; z-index:75; max-width:320px; width:calc(100% - 32px);">
+  <div class="panel" style="padding:14px;">
+    <div style="font-weight:700; margin-bottom:10px; font-size:14px;" id="call-status-text">Connecting…</div>
+    <div id="call-tiles" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="ghost-btn" id="mute-call-btn" style="font-size:12px; padding:8px 12px;">🎤 Mute</button>
+      <button class="ghost-btn hidden" id="camera-call-btn" style="font-size:12px; padding:8px 12px;">📷 Camera off</button>
+      <button class="ghost-btn" id="screenshare-call-btn" style="font-size:12px; padding:8px 12px;">🖥️ Share screen</button>
+      <button class="ghost-btn" id="end-call-btn" style="color:var(--sweet); font-size:12px; padding:8px 12px;">☎ Leave call</button>
+    </div>
+  </div>
+</div>
+
+<div id="owner-member-chat-overlay" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:65; display:flex; align-items:center; justify-content:center; padding:16px;">
+  <div class="panel" style="max-width:800px; width:100%; height:90vh; display:flex; flex-direction:column;">
+    <div class="eyebrow">MEMBER CHAT</div>
+    <h2 class="panel-title" id="owner-chat-member-name">Chat with member</h2>
+    <div id="owner-chat-messages" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px; padding:8px; margin:12px 0; font-size:16px;"></div>
+    <div style="display:flex; gap:8px;">
+      <input class="text" id="owner-chat-input" placeholder="Type a message…" style="flex:1; font-size:16px; padding:14px;" />
+      <button class="confirm-btn" id="owner-chat-send-btn" style="padding:14px 24px;">Send</button>
+    </div>
+    <button class="ghost-btn" id="owner-chat-close-btn" style="margin-top:10px; width:100%;">Close</button>
+  </div>
+</div>
+
+<div id="redeem-modal-overlay" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:50; display:flex; align-items:center; justify-content:center; padding:20px;">
+  <div class="panel" style="max-width:360px; width:100%; position:relative;">
+    <button id="redeem-modal-close" style="position:absolute; top:12px; right:12px; background:none; border:none; color:var(--muted); font-size:18px; cursor:pointer;">✕</button>
+    <div class="eyebrow">REDEEM CODE</div>
+    <h2 class="panel-title">Have a promo code?</h2>
+    <input class="text" id="redeem-modal-input" placeholder="e.g. FIRST10" style="text-transform:uppercase;" />
+    <div class="error-text" id="redeem-modal-error">That code isn't valid or has been revoked.</div>
+    <button class="confirm-btn" id="redeem-modal-apply-btn" style="margin-top:12px;">Apply code</button>
+    <p class="fineprint">This carries over to checkout automatically.</p>
+  </div>
+</div>
+
+<div class="tray" id="tray">
+  <div class="tray-info">
+    <div class="tray-label">DISPENSING TRAY</div>
+    <div class="tray-count" id="tray-count">Empty — pick a code above</div>
+  </div>
+  <div class="tray-total" id="tray-total">$0.00</div>
+  <button class="checkout-btn" id="checkout-btn" disabled>Checkout →</button>
+</div>
+
+<script>
+  // ---- Firebase setup ----
+  const firebaseConfig = {
+    apiKey: "AIzaSyBA7oFaDc3KXXG2iCbUFutl45rT5TpUFbg",
+    authDomain: "vendor-f09b9.firebaseapp.com",
+    projectId: "vendor-f09b9",
+    storageBucket: "vendor-f09b9.firebasestorage.app",
+    messagingSenderId: "77510059541",
+    appId: "1:77510059541:web:0e79dc5c1c3eb79fef901c",
+    measurementId: "G-QQD0MYJ25F"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const storage = firebase.storage();
+  const ordersRef = db.collection("orders");
+  const membersRef = db.collection("members");
+  const memberMessagesRef = db.collection("memberMessages");
+  const inventoryRef = db.collection("inventory");
+  const memberInventoryRef = db.collection("memberInventory");
+  const settingsRef = db.collection("settings");
+  const pickupLocationRef = settingsRef.doc("pickupLocation");
+  let currentPickupLocation = "";
+  pickupLocationRef.onSnapshot(doc=>{
+    currentPickupLocation = doc.exists ? (doc.data().location || "") : "";
+    const input = document.getElementById("pickup-location-input");
+    if (input && document.activeElement !== input) input.value = currentPickupLocation;
+  }, err=> console.error("pickup location watch error", err));
+
+  const OWNER_PASSWORD = "vendorowners2026!!";
+  const ACCOUNTING_PASSWORD = "vendaccounting77!!";
+  const OWNER_EMAIL = "jeevanzvarughese@gmail.com,john.s.lawler2015@gmail.com";
+  let lastMailtoLink = "";
+
+  function sendOrderEmail(id, name, items, total, payment){
+    const lines = [`Benji Snacks order ${id}`, `From: ${name}`];
+    items.forEach(it=> lines.push(`${it.qty}× ${it.name} (${money(it.price*it.qty)})`));
+    lines.push(`Total: ${money(total)} via ${payment}`);
+    const subject = encodeURIComponent(`Benji Snacks order ${id} — ${name}`);
+    const body = encodeURIComponent(lines.join("\n"));
+    const mailtoLink = `mailto:${OWNER_EMAIL}?subject=${subject}&body=${body}`;
+    lastMailtoLink = mailtoLink;
+    window.location.href = mailtoLink;
+  }
+
+  function watchOrderStatus(orderDocRef, isPremium){
+    const summaryElId = isPremium ? "member-confirm-summary" : "confirm-summary";
+    orderDocRef.onSnapshot(doc=>{
+      const data = doc.data();
+      if (!data) return;
+      const summaryEl = document.getElementById(summaryElId);
+      if (!summaryEl) return;
+      const paidByCard = data.payment === "Card";
+      if (data.status === "fulfilled") {
+        summaryEl.innerHTML = `✓ Picked up — thanks for your order!`;
+      } else if (data.status === "approved") {
+        const locationText = (currentPickupLocation || "ask the seller where to go").replace(/</g,"&lt;");
+        summaryEl.innerHTML = paidByCard
+          ? `✓ Approved! Pick up at: <strong style="color:#EDEAE1">${locationText}</strong> — already paid, nothing due!`
+          : `✓ Approved! Pick up at: <strong style="color:#EDEAE1">${locationText}</strong> — bring <strong style="color:#EDEAE1">${money(data.total)}</strong> via ${data.payment}.`;
+      } else {
+        summaryEl.innerHTML = `Waiting for approval — keep this page open, your pickup spot will show here the moment it's approved.`;
+      }
+    }, err=> console.error("order status watch error", err));
+  }
+
+  // ---- Stripe card payments ----
+  async function goToStripeCheckout(items, buyerName, orderId, btnId, statusId){
+    btnId = btnId || "pay-card-btn";
+    statusId = statusId || "card-pay-status";
+    const btn = document.getElementById(btnId);
+    const statusEl = document.getElementById(statusId);
+    btn.disabled = true;
+    statusEl.style.display = "block";
+    statusEl.textContent = "Redirecting to secure checkout…";
+
+    const baseUrl = window.location.origin + window.location.pathname;
+    try {
+      const resp = await fetch("/api/create-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items,
+          buyerName,
+          orderId,
+          successUrl: `${baseUrl}?stripe_success=1&pending=${orderId}&session_id={CHECKOUT_SESSION_ID}`,
+          cancelUrl: `${baseUrl}?stripe_cancel=1`
+        })
+      });
+      const data = await resp.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error(data.error || "Unknown error");
+      }
+    } catch (e) {
+      console.error(e);
+      statusEl.textContent = "Couldn't start card payment — try again or use another payment method.";
+      btn.disabled = false;
+    }
+  }
+
+  async function finalizePaidOrder(pendingOrder){
+    const invRef = pendingOrder.kind === "member" ? memberInventoryRef : inventoryRef;
+    try {
+      const batch = db.batch();
+      const orderDocRef = ordersRef.doc();
+      batch.set(orderDocRef, {
+        id: pendingOrder.id,
+        name: pendingOrder.name,
+        payment: "Card",
+        items: pendingOrder.orderItems,
+        total: Number(pendingOrder.total.toFixed(2)),
+        time: firebase.firestore.FieldValue.serverTimestamp(),
+        status: "pending",
+        discountCode: pendingOrder.discountCode,
+        discountPct: pendingOrder.discountPct,
+        isPremium: pendingOrder.kind === "member",
+        memberCode: pendingOrder.memberCode || null
+      });
+      pendingOrder.orderItems.forEach(it=>{
+        batch.update(invRef.doc(it.code), { stock: firebase.firestore.FieldValue.increment(-it.qty) });
+      });
+      await batch.commit();
+      if (pendingOrder.discountCode) {
+        discountCodesRef.doc(pendingOrder.discountCode).update({ usageCount: firebase.firestore.FieldValue.increment(1) }).catch(()=>{});
+      }
+      sendOrderEmail(pendingOrder.id, pendingOrder.name, pendingOrder.orderItems, pendingOrder.total, "Card");
+
+      const isPremium = pendingOrder.kind === "member";
+      const codeElId = isPremium ? "member-confirm-code" : "confirm-code";
+      document.getElementById(codeElId).textContent = pendingOrder.id;
+      watchOrderStatus(orderDocRef, isPremium);
+      show(isPremium ? "members-done-view" : "done-view");
+    } catch (e) {
+      console.error(e);
+      alert(`Your card payment went through, but there was a problem saving the order. Please screenshot this and show the seller — reference code: ${pendingOrder.id}`);
+    }
+  }
+
+  async function handleStripeReturn(){
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("stripe_success") === "1") {
+      const pendingId = params.get("pending");
+      const sessionId = params.get("session_id");
+      window.history.replaceState({}, "", window.location.pathname);
+      const stored = pendingId ? sessionStorage.getItem(`pendingOrder_${pendingId}`) : null;
+      if (!stored) {
+        alert(`Payment completed, but this device lost track of your order details. If you were charged, contact the seller with this reference: ${pendingId || "unknown"}`);
+        return;
+      }
+      const pendingOrder = JSON.parse(stored);
+      try {
+        const resp = await fetch(`/api/verify-session?session_id=${encodeURIComponent(sessionId)}`);
+        const data = await resp.json();
+        if (data.paid) {
+          await finalizePaidOrder(pendingOrder);
+          sessionStorage.removeItem(`pendingOrder_${pendingId}`);
+        } else {
+          alert("Payment wasn't completed — please try again.");
+        }
+      } catch (e) {
+        console.error(e);
+        alert(`Couldn't confirm your payment. If you were charged, contact the seller with this reference: ${pendingId}`);
+      }
+    } else if (params.get("stripe_cancel") === "1") {
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }
+
+  const DEFAULT_MEMBER_INVENTORY = [
+    { code:"M1", name:"Airheads Bar", price:2.00, tag:"sweet", stock:60 },
+    { code:"M2", name:"Skittles", price:1.00, tag:"sweet", stock:30 },
+    { code:"M3", name:"Sour Patch (big bag)", price:6.00, tag:"sweet", stock:5 },
+    { code:"M4", name:"Gummy Bears (big bag)", price:6.00, tag:"sweet", stock:5 },
+    { code:"M5", name:"Nutella", price:5.00, tag:"sweet", stock:10 },
+  ];
+
+  const DEFAULT_INVENTORY = [
+    { code:"A1", name:"Gatorade", price:5.00, tag:"drink", stock:24, flavors:["Red","White","Blue"] },
+    { code:"A2", name:"Electrolyte Sticks", price:1.00, tag:"drink", stock:30 },
+    { code:"A3", name:"Goldfish", price:4.00, tag:"salty", stock:20 },
+    { code:"B1", name:"Cheez-Its", price:4.00, tag:"salty", stock:30 },
+    { code:"B3", name:"Lay's Original Chips", price:5.00, tag:"salty", stock:10 },
+    { code:"C3", name:"Sour Patch (med)", price:3.00, tag:"sweet", stock:1 },
+    { code:"D1", name:"Gummy Bears (med)", price:3.00, tag:"sweet", stock:1 },
+  ];
+  const TAG_COLOR = { sweet:"#FF6B7A", salty:"#FFC24B", drink:"#4ECDC4", "healthy-ish":"#8BD17C" };
+  const money = n => `$${n.toFixed(2)}`;
+
+  // Live inventory, kept in sync with Firestore. Starts empty until the first snapshot arrives.
+  let INVENTORY = [];
+  let MEMBER_INVENTORY = [];
+  let unsubscribeInventory = null;
+  let unsubscribeMemberInventory = null;
+
+  async function seedIfEmpty(ref, defaults){
+    const snap = await ref.limit(1).get();
+    if (snap.empty) {
+      const batch = db.batch();
+      defaults.forEach(item => batch.set(ref.doc(item.code), item));
+      await batch.commit();
+    }
+  }
+
+  function watchInventory(){
+    unsubscribeInventory = inventoryRef.onSnapshot(snapshot=>{
+      INVENTORY = snapshot.docs.map(d=>d.data()).sort((a,b)=> a.code.localeCompare(b.code));
+      renderGrid();
+      renderTray();
+      if (document.getElementById("dashboard-view") && !document.getElementById("dashboard-view").classList.contains("hidden")) {
+        renderStockManager();
+        renderLowStockAlerts();
+        renderRetailPrices();
+        renderProfitTracker(lastRealOrdersForProfit);
+      }
+    }, err=> console.error("inventory watch error", err));
+  }
+
+  function watchMemberInventory(){
+    unsubscribeMemberInventory = memberInventoryRef.onSnapshot(snapshot=>{
+      MEMBER_INVENTORY = snapshot.docs.map(d=>d.data()).sort((a,b)=> a.code.localeCompare(b.code));
+      if (currentMember) { renderMemberGrid(); renderMemberTray(); }
+      if (document.getElementById("dashboard-view") && !document.getElementById("dashboard-view").classList.contains("hidden")) {
+        renderStockManager();
+        renderLowStockAlerts();
+        renderRetailPrices();
+        renderProfitTracker(lastRealOrdersForProfit);
+      }
+    }, err=> console.error("member inventory watch error", err));
+  }
+
+  function retailRowHtml(it, collectionName){
+    const cost = typeof it.unitCost === "number" ? it.unitCost : 0;
+    const margin = it.price - cost;
+    const marginColor = margin >= 0 ? "var(--healthy)" : "var(--sweet)";
+    return `
+      <div class="stock-row">
+        <div>
+          <div class="stock-name">${it.code} · ${it.name}</div>
+          <div class="fineprint" style="margin:2px 0 0;">Retail: <strong style="color:var(--gold);">${money(it.price)}</strong> &nbsp;·&nbsp; Margin: <strong style="color:${marginColor};">${money(margin)}</strong></div>
+        </div>
+        <div class="stock-input-wrap">
+          <span style="font-size:12px; color:var(--muted);">Unit cost $</span>
+          <input type="number" min="0" step="0.01" class="stock-input" value="${cost.toFixed(2)}" data-unitcostcode="${it.code}" data-unitcostcoll="${collectionName}" />
+          <button class="stock-save-btn" data-saveunitcost="${it.code}" data-saveunitcostcoll="${collectionName}">Save</button>
+          <span class="stock-saved" data-unitcostsaved="${it.code}" data-unitcostsavedcoll="${collectionName}" style="display:none;">Saved</span>
+        </div>
+      </div>
+    `;
+  }
+
+  function wireUnitCostSaveButtons(container){
+    container.querySelectorAll("button[data-saveunitcost]").forEach(btn=>{
+      btn.addEventListener("click", async ()=>{
+        const code = btn.dataset.saveunitcost;
+        const coll = btn.dataset.saveunitcostcoll;
+        const input = container.querySelector(`input[data-unitcostcode="${code}"][data-unitcostcoll="${coll}"]`);
+        const newCost = Math.max(0, parseFloat(input.value) || 0);
+        input.value = newCost.toFixed(2);
+        btn.disabled = true;
+        btn.textContent = "…";
+        try {
+          const ref = coll === "member" ? memberInventoryRef : inventoryRef;
+          await ref.doc(code).update({ unitCost: newCost });
+          const savedEl = container.querySelector(`span[data-unitcostsaved="${code}"][data-unitcostsavedcoll="${coll}"]`);
+          if (savedEl) {
+            savedEl.style.display = "inline";
+            setTimeout(()=> savedEl.style.display = "none", 1500);
+          }
+        } catch (e) {
+          console.error(e);
+          alert("Couldn't save unit cost — try again.");
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Save";
+        }
+      });
+    });
+  }
+
+  function renderRetailPrices(){
+    const regularEl = document.getElementById("retail-prices-regular");
+    const memberEl = document.getElementById("retail-prices-member");
+    if (!regularEl || !memberEl) return;
+    regularEl.innerHTML = INVENTORY.length
+      ? INVENTORY.map(it=> retailRowHtml(it, "regular")).join("")
+      : `<p style="color:var(--muted2)">Loading…</p>`;
+    memberEl.innerHTML = MEMBER_INVENTORY.length
+      ? MEMBER_INVENTORY.map(it=> retailRowHtml(it, "member")).join("")
+      : `<p style="color:var(--muted2)">Loading…</p>`;
+    wireUnitCostSaveButtons(regularEl);
+    wireUnitCostSaveButtons(memberEl);
+  }
+
+  let selection = {};
+  let payment = "Venmo";
+  let unsubscribeOrders = null;
+  let unsubscribeMembers = null;
+  let memberSelection = {};
+  let memberPayment = "Venmo";
+  let currentMember = null; // { name, code }
+  let appliedDiscount = null; // { code, pct }
+  let memberAppliedDiscount = null; // { code, pct }
+
+  const grid = document.getElementById("grid");
+  const trayCount = document.getElementById("tray-count");
+  const trayTotal = document.getElementById("tray-total");
+  const checkoutBtn = document.getElementById("checkout-btn");
+
+  let selectedFlavors = {}; // code -> chosen flavor
+  let currentBanners = [];
+
+  function renderGrid(){
+    grid.innerHTML = "";
+    let bannerCycle = 0;
+    INVENTORY.forEach((it, index) => {
+      const qty = selection[it.code] || 0;
+      const out = it.stock <= 0;
+      const card = document.createElement("div");
+      card.className = "slot";
+      if (out) card.style.opacity = "0.45";
+      const hasFlavors = Array.isArray(it.flavors) && it.flavors.length > 0;
+      const currentFlavor = selectedFlavors[it.code] || (hasFlavors ? it.flavors[0] : null);
+      const flavorSelector = hasFlavors ? `
+        <select class="flavor-select" data-flavorcode="${it.code}" style="width:100%; background:var(--panel-dark); border:1px solid var(--line); border-radius:6px; color:var(--cream); font-size:12px; padding:5px 6px; margin-top:2px;">
+          ${it.flavors.map(f=> `<option value="${f}" ${f===currentFlavor?"selected":""}>${f}</option>`).join("")}
+        </select>
+      ` : "";
+      card.innerHTML = `
+        <div class="slot-top">
+          <span class="code-chip">${it.code}</span>
+          <span class="tag-dot" style="background:${TAG_COLOR[it.tag]}"></span>
+        </div>
+        <div class="slot-name">${it.name}</div>
+        ${flavorSelector}
+        <div class="slot-price">${money(it.price)}</div>
+        <div class="slot-stock ${it.stock <= 3 && it.stock > 0 ? 'low' : ''}">${out ? 'Out of stock' : `${it.stock} left`}</div>
+        <button class="press-btn" ${(out || qty >= it.stock) ? "disabled" : ""} data-code="${it.code}">
+          ${out ? "SOLD OUT" : (qty >= it.stock ? `MAX (${qty})` : (qty > 0 ? `+1 (${qty})` : "SELECT"))}
+        </button>
+        ${qty > 0 ? `<button class="minus-btn" data-code="${it.code}">remove one</button>` : ""}
+      `;
+      grid.appendChild(card);
+
+      if (currentBanners.length > 0 && (index + 1) % 4 === 0 && index !== INVENTORY.length - 1) {
+        const banner = currentBanners[bannerCycle % currentBanners.length];
+        bannerCycle++;
+        const bannerEl = document.createElement("div");
+        bannerEl.className = "grid-banner";
+        bannerEl.textContent = `📣 ${banner.text || ""}`;
+        grid.appendChild(bannerEl);
+      }
+    });
+
+    grid.querySelectorAll(".flavor-select").forEach(sel=>{
+      sel.addEventListener("change", ()=>{
+        selectedFlavors[sel.dataset.flavorcode] = sel.value;
+      });
+      sel.addEventListener("click", (e)=> e.stopPropagation());
+    });
+
+    grid.querySelectorAll(".press-btn:not([disabled])").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const code = btn.dataset.code;
+        const it = INVENTORY.find(i=>i.code===code);
+        if ((selection[code]||0) >= it.stock) return;
+        selection[code] = (selection[code]||0)+1;
+        btn.parentElement.style.animation = "flash 0.22s ease";
+        setTimeout(()=> btn.parentElement.style.animation = "", 220);
+        renderGrid();
+        renderTray();
+      });
+    });
+    grid.querySelectorAll(".minus-btn").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const code = btn.dataset.code;
+        if (selection[code] > 1) selection[code]--;
+        else delete selection[code];
+        renderGrid();
+        renderTray();
+      });
+    });
+  }
+
+  function currentItems(){
+    return Object.entries(selection).filter(([,q])=>q>0);
+  }
+  function currentTotal(){
+    return currentItems().reduce((sum,[code,q])=>{
+      const p = INVENTORY.find(i=>i.code===code)?.price || 0;
+      return sum + p*q;
+    },0);
+  }
+
+  function renderTray(){
+    const items = currentItems();
+    const count = items.reduce((s,[,q])=>s+q,0);
+    trayCount.textContent = count === 0 ? "Empty — pick a code above" : `${count} item${count>1?"s":""} selected`;
+    trayTotal.textContent = money(currentTotal());
+    checkoutBtn.disabled = count === 0;
+    checkoutBtn.dataset.mode = "shop";
+  }
+
+  function findOverStock(items, inventory){
+    for (const [code, qty] of items) {
+      const it = inventory.find(i=>i.code===code);
+      if (!it || qty > it.stock) return it ? it.name : code;
+    }
+    return null;
+  }
+
+  document.getElementById("checkout-btn").addEventListener("click", ()=>{
+    if (checkoutBtn.dataset.mode === "member") {
+      const overName = findOverStock(memberItems(), MEMBER_INVENTORY);
+      if (overName) {
+        alert(`Sorry, ${overName} doesn't have enough stock left. Please adjust your order.`);
+        renderMemberGrid();
+        renderMemberTray();
+        return;
+      }
+      renderMemberReceipt();
+      const memberAppliedEl = document.getElementById("member-discount-applied");
+      if (memberAppliedDiscount) {
+        document.getElementById("member-discount-code-input").value = memberAppliedDiscount.code;
+        memberAppliedEl.style.display = "block";
+        memberAppliedEl.textContent = `✓ ${memberAppliedDiscount.pct}% off applied`;
+      } else {
+        memberAppliedEl.style.display = "none";
+      }
+      show("members-checkout-view");
+    } else {
+      const overName = findOverStock(currentItems(), INVENTORY);
+      if (overName) {
+        alert(`Sorry, ${overName} doesn't have enough stock left. Please adjust your order.`);
+        renderGrid();
+        renderTray();
+        return;
+      }
+      renderReceipt();
+      const appliedEl = document.getElementById("discount-applied");
+      if (appliedDiscount) {
+        document.getElementById("discount-code-input").value = appliedDiscount.code;
+        appliedEl.style.display = "block";
+        appliedEl.textContent = `✓ ${appliedDiscount.pct}% off applied`;
+      } else {
+        appliedEl.style.display = "none";
+      }
+      show("checkout-view");
+    }
+  });
+
+  function finalTotal(rawTotal, discount){
+    if (!discount) return rawTotal;
+    return Math.max(0, rawTotal * (1 - discount.pct/100));
+  }
+
+  function renderMemberReceipt(){
+    const receipt = document.getElementById("member-receipt");
+    const items = memberItems();
+    let html = "";
+    items.forEach(([code,qty])=>{
+      const it = MEMBER_INVENTORY.find(i=>i.code===code);
+      html += `<div class="receipt-row"><span>${qty}× ${it.name}</span><span>${money(it.price*qty)}</span></div>`;
+    });
+    const raw = memberTotal();
+    if (memberAppliedDiscount) {
+      html += `<div class="receipt-row"><span>Discount (${memberAppliedDiscount.code})</span><span>-${memberAppliedDiscount.pct}%</span></div>`;
+    }
+    html += `<div class="receipt-row receipt-total"><strong>Total</strong><strong>${money(finalTotal(raw, memberAppliedDiscount))}</strong></div>`;
+    receipt.innerHTML = html;
+  }
+
+  function renderReceipt(){
+    const receipt = document.getElementById("receipt");
+    const items = currentItems();
+    let html = "";
+    items.forEach(([code,qty])=>{
+      const it = INVENTORY.find(i=>i.code===code);
+      const flavor = Array.isArray(it.flavors) && it.flavors.length ? (selectedFlavors[code] || it.flavors[0]) : null;
+      const displayName = flavor ? `${it.name} (${flavor})` : it.name;
+      html += `<div class="receipt-row"><span>${qty}× ${displayName}</span><span>${money(it.price*qty)}</span></div>`;
+    });
+    const raw = currentTotal();
+    if (appliedDiscount) {
+      html += `<div class="receipt-row"><span>Discount (${appliedDiscount.code})</span><span>-${appliedDiscount.pct}%</span></div>`;
+    }
+    html += `<div class="receipt-row receipt-total"><strong>Total</strong><strong>${money(finalTotal(raw, appliedDiscount))}</strong></div>`;
+    receipt.innerHTML = html;
+  }
+
+  async function checkDiscountCode(code){
+    const doc = await discountCodesRef.doc(code).get();
+    if (doc.exists && doc.data().active) {
+      return { code, pct: doc.data().pct };
+    }
+    return null;
+  }
+
+  function updateShopBadge(){
+    const badge = document.getElementById("shop-discount-badge");
+    if (appliedDiscount) {
+      badge.textContent = `🏷 ${appliedDiscount.code} · ${appliedDiscount.pct}% off applied`;
+      badge.classList.remove("hidden");
+    } else {
+      badge.classList.add("hidden");
+    }
+  }
+
+  function updateMemberShopBadge(){
+    const badge = document.getElementById("member-shop-discount-badge");
+    if (memberAppliedDiscount) {
+      badge.textContent = `🏷 ${memberAppliedDiscount.code} · ${memberAppliedDiscount.pct}% off applied`;
+      badge.classList.remove("hidden");
+    } else {
+      badge.classList.add("hidden");
+    }
+  }
+
+  document.getElementById("apply-discount-btn").addEventListener("click", async ()=>{
+    const input = document.getElementById("discount-code-input");
+    const errorEl = document.getElementById("discount-error");
+    const appliedEl = document.getElementById("discount-applied");
+    const code = input.value.trim().toUpperCase();
+    if (!code) return;
+    errorEl.style.display = "none";
+    try {
+      const result = await checkDiscountCode(code);
+      if (result) {
+        appliedDiscount = result;
+        appliedEl.style.display = "block";
+        appliedEl.textContent = `✓ ${appliedDiscount.pct}% off applied`;
+        renderReceipt();
+        updateShopBadge();
+      } else {
+        appliedDiscount = null;
+        appliedEl.style.display = "none";
+        errorEl.style.display = "block";
+      }
+    } catch (e) {
+      console.error(e);
+      errorEl.textContent = "Couldn't check that code — try again.";
+      errorEl.style.display = "block";
+    }
+  });
+
+  document.getElementById("member-apply-discount-btn").addEventListener("click", async ()=>{
+    const input = document.getElementById("member-discount-code-input");
+    const errorEl = document.getElementById("member-discount-error");
+    const appliedEl = document.getElementById("member-discount-applied");
+    const code = input.value.trim().toUpperCase();
+    if (!code) return;
+    errorEl.style.display = "none";
+    try {
+      const result = await checkDiscountCode(code);
+      if (result) {
+        memberAppliedDiscount = result;
+        appliedEl.style.display = "block";
+        appliedEl.textContent = `✓ ${memberAppliedDiscount.pct}% off applied`;
+        renderMemberReceipt();
+        updateMemberShopBadge();
+      } else {
+        memberAppliedDiscount = null;
+        appliedEl.style.display = "none";
+        errorEl.style.display = "block";
+      }
+    } catch (e) {
+      console.error(e);
+      errorEl.textContent = "Couldn't check that code — try again.";
+      errorEl.style.display = "block";
+    }
+  });
+
+  // ---- Redeem modal (works from the shop page, before checkout) ----
+  let redeemModalContext = "shop"; // "shop" | "member"
+
+  function openRedeemModal(context){
+    redeemModalContext = context;
+    document.getElementById("redeem-modal-input").value = "";
+    document.getElementById("redeem-modal-error").style.display = "none";
+    document.getElementById("redeem-modal-overlay").classList.remove("hidden");
+    document.getElementById("redeem-modal-input").focus();
+  }
+  function closeRedeemModal(){
+    document.getElementById("redeem-modal-overlay").classList.add("hidden");
+  }
+
+  document.getElementById("open-redeem-btn").addEventListener("click", ()=> openRedeemModal("shop"));
+  document.getElementById("member-open-redeem-btn").addEventListener("click", ()=> openRedeemModal("member"));
+  document.getElementById("redeem-modal-close").addEventListener("click", closeRedeemModal);
+  document.getElementById("redeem-modal-overlay").addEventListener("click", (e)=>{
+    if (e.target.id === "redeem-modal-overlay") closeRedeemModal();
+  });
+
+  document.getElementById("redeem-modal-apply-btn").addEventListener("click", async ()=>{
+    const input = document.getElementById("redeem-modal-input");
+    const errorEl = document.getElementById("redeem-modal-error");
+    const code = input.value.trim().toUpperCase();
+    if (!code) return;
+    errorEl.style.display = "none";
+    const btn = document.getElementById("redeem-modal-apply-btn");
+    btn.disabled = true;
+    btn.textContent = "Checking…";
+    try {
+      const result = await checkDiscountCode(code);
+      if (result) {
+        if (redeemModalContext === "member") {
+          memberAppliedDiscount = result;
+          updateMemberShopBadge();
+          document.getElementById("member-discount-code-input").value = result.code;
+          document.getElementById("member-discount-applied").style.display = "block";
+          document.getElementById("member-discount-applied").textContent = `✓ ${result.pct}% off applied`;
+        } else {
+          appliedDiscount = result;
+          updateShopBadge();
+          document.getElementById("discount-code-input").value = result.code;
+          document.getElementById("discount-applied").style.display = "block";
+          document.getElementById("discount-applied").textContent = `✓ ${result.pct}% off applied`;
+        }
+        closeRedeemModal();
+      } else {
+        errorEl.style.display = "block";
+      }
+    } catch (e) {
+      console.error(e);
+      errorEl.textContent = "Couldn't check that code — try again.";
+      errorEl.style.display = "block";
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Apply code";
+    }
+  });
+  document.getElementById("redeem-modal-input").addEventListener("keydown", (e)=>{
+    if (e.key === "Enter") document.getElementById("redeem-modal-apply-btn").click();
+  });
+
+  document.querySelectorAll(".pay-chip").forEach(chip=>{
+    chip.addEventListener("click", ()=>{
+      document.querySelectorAll(".pay-chip").forEach(c=>c.classList.remove("active"));
+      chip.classList.add("active");
+      payment = chip.dataset.pay;
+    });
+  });
+
+  document.getElementById("back-btn").addEventListener("click", ()=> show("shop-view"));
+
+  const nameInput = document.getElementById("buyer-name");
+  nameInput.addEventListener("input", ()=>{
+    if (nameInput.value.trim()) {
+      document.getElementById("name-error").style.display = "none";
+      nameInput.style.borderColor = "var(--line)";
+    }
+  });
+
+  document.getElementById("place-order-btn").addEventListener("click", async ()=>{
+    const name = nameInput.value.trim();
+    const nameError = document.getElementById("name-error");
+    if (!name) {
+      nameError.style.display = "block";
+      nameInput.style.borderColor = "var(--sweet)";
+      nameInput.focus();
+      return;
+    }
+    nameError.style.display = "none";
+
+    const items = currentItems();
+    const overName = findOverStock(items, INVENTORY);
+    if (overName) {
+      alert(`Sorry, ${overName} doesn't have enough stock left. Please adjust your order.`);
+      renderGrid();
+      renderTray();
+      show("shop-view");
+      return;
+    }
+
+    const id = Math.random().toString(36).slice(2,6).toUpperCase();
+    const rawTotal = currentTotal();
+    const total = finalTotal(rawTotal, appliedDiscount);
+    const orderItems = items.map(([code,qty])=>{
+      const it = INVENTORY.find(i=>i.code===code);
+      const flavor = Array.isArray(it.flavors) && it.flavors.length ? (selectedFlavors[code] || it.flavors[0]) : null;
+      const displayName = flavor ? `${it.name} (${flavor})` : it.name;
+      return { code, name: displayName, qty, price: it.price };
+    });
+
+    const btn = document.getElementById("place-order-btn");
+    btn.disabled = true;
+    btn.textContent = "Placing…";
+
+    try {
+      const batch = db.batch();
+      const orderDocRef = ordersRef.doc();
+      batch.set(orderDocRef, {
+        id, name, payment,
+        items: orderItems,
+        total: Number(total.toFixed(2)),
+        time: firebase.firestore.FieldValue.serverTimestamp(),
+        status: "pending",
+        discountCode: appliedDiscount ? appliedDiscount.code : null,
+        discountPct: appliedDiscount ? appliedDiscount.pct : 0
+      });
+      orderItems.forEach(it=>{
+        batch.update(inventoryRef.doc(it.code), { stock: firebase.firestore.FieldValue.increment(-it.qty) });
+      });
+      await batch.commit();
+      if (appliedDiscount) {
+        discountCodesRef.doc(appliedDiscount.code).update({ usageCount: firebase.firestore.FieldValue.increment(1) }).catch(()=>{});
+      }
+
+      document.getElementById("confirm-code").textContent = id;
+      watchOrderStatus(orderDocRef, false);
+      show("done-view");
+      sendOrderEmail(id, name, orderItems, total, payment);
+    } catch (e) {
+      alert("Couldn't place your order — check your connection and try again.");
+      console.error(e);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Place order";
+    }
+  });
+
+  document.getElementById("resend-email-btn").addEventListener("click", ()=>{
+    if (lastMailtoLink) window.location.href = lastMailtoLink;
+  });
+
+  document.getElementById("pay-card-btn").addEventListener("click", async ()=>{
+    const name = nameInput.value.trim();
+    const nameError = document.getElementById("name-error");
+    if (!name) {
+      nameError.style.display = "block";
+      nameInput.style.borderColor = "var(--sweet)";
+      nameInput.focus();
+      return;
+    }
+    nameError.style.display = "none";
+
+    const items = currentItems();
+    const overName = findOverStock(items, INVENTORY);
+    if (overName) {
+      alert(`Sorry, ${overName} doesn't have enough stock left. Please adjust your order.`);
+      renderGrid();
+      renderTray();
+      show("shop-view");
+      return;
+    }
+
+    const id = Math.random().toString(36).slice(2,6).toUpperCase();
+    const rawTotal = currentTotal();
+    const total = finalTotal(rawTotal, appliedDiscount);
+    const orderItems = items.map(([code,qty])=>{
+      const it = INVENTORY.find(i=>i.code===code);
+      const flavor = Array.isArray(it.flavors) && it.flavors.length ? (selectedFlavors[code] || it.flavors[0]) : null;
+      const displayName = flavor ? `${it.name} (${flavor})` : it.name;
+      return { code, name: displayName, qty, price: it.price };
+    });
+
+    const pendingOrder = {
+      kind: "regular", id, name, orderItems, total,
+      discountCode: appliedDiscount ? appliedDiscount.code : null,
+      discountPct: appliedDiscount ? appliedDiscount.pct : 0
+    };
+    sessionStorage.setItem(`pendingOrder_${id}`, JSON.stringify(pendingOrder));
+
+    await goToStripeCheckout(orderItems, name, id);
+  });
+
+  document.getElementById("new-order-btn").addEventListener("click", ()=>{
+    selection = {};
+    nameInput.value = "";
+    document.getElementById("discount-code-input").value = "";
+    document.getElementById("discount-applied").style.display = "none";
+    appliedDiscount = null;
+    updateShopBadge();
+    renderGrid();
+    renderTray();
+    show("shop-view");
+  });
+
+  // ---- Owner dashboard ----
+  document.getElementById("seller-toggle").addEventListener("click", ()=>{
+    show("login-view");
+  });
+  document.getElementById("accounting-toggle").addEventListener("click", ()=>{
+    show("accounting-login-view");
+  });
+  document.getElementById("dash-back-btn").addEventListener("click", ()=>{
+    if (unsubscribeOrders) { unsubscribeOrders(); unsubscribeOrders = null; }
+    if (unsubscribeMembers) { unsubscribeMembers(); unsubscribeMembers = null; }
+    if (unsubscribeMembershipRequests) { unsubscribeMembershipRequests(); unsubscribeMembershipRequests = null; }
+    if (unsubscribeClients) { unsubscribeClients(); unsubscribeClients = null; }
+    if (unsubscribeExpenses) { unsubscribeExpenses(); unsubscribeExpenses = null; }
+    if (unsubscribeDiscountCodes) { unsubscribeDiscountCodes(); unsubscribeDiscountCodes = null; }
+    if (unsubscribeFlyerFiles) { unsubscribeFlyerFiles(); unsubscribeFlyerFiles = null; }
+    if (unsubscribeTeamChat) { unsubscribeTeamChat(); unsubscribeTeamChat = null; }
+    if (unsubscribeBanners) { unsubscribeBanners(); unsubscribeBanners = null; }
+    if (unsubscribeOfficersManage) { unsubscribeOfficersManage(); unsubscribeOfficersManage = null; }
+    if (unsubscribeEventsManage) { unsubscribeEventsManage(); unsubscribeEventsManage = null; }
+    if (unsubscribeAnnouncementsManage) { unsubscribeAnnouncementsManage(); unsubscribeAnnouncementsManage = null; }
+    show("shop-view");
+  });
+
+  // ---- Members: entry ----
+  document.getElementById("policy-toggle").addEventListener("click", ()=>{
+    document.getElementById("policy-modal-overlay").classList.remove("hidden");
+  });
+  document.getElementById("close-policy-btn").addEventListener("click", ()=>{
+    document.getElementById("policy-modal-overlay").classList.add("hidden");
+  });
+  document.getElementById("policy-modal-overlay").addEventListener("click", (e)=>{
+    if (e.target.id === "policy-modal-overlay") {
+      document.getElementById("policy-modal-overlay").classList.add("hidden");
+    }
+  });
+  document.querySelectorAll(".checkout-policy-link").forEach(link=>{
+    link.addEventListener("click", (e)=>{
+      e.preventDefault();
+      document.getElementById("policy-modal-overlay").classList.remove("hidden");
+    });
+  });
+
+  document.getElementById("members-toggle").addEventListener("click", ()=>{
+    show("members-login-view");
+  });
+
+  function generateCode(){
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let code = "";
+    for (let i=0;i<6;i++) code += chars[Math.floor(Math.random()*chars.length)];
+    return code;
+  }
+
+  // ---- Buy membership ----
+  const membershipRequestsRef = db.collection("membershipRequests");
+  let membershipPayment = "Venmo";
+  let membershipPrice = 5.00;
+
+  settingsRef.doc("membership").onSnapshot(doc=>{
+    membershipPrice = doc.exists && typeof doc.data().price === "number" ? doc.data().price : 5.00;
+    const displayEl = document.getElementById("membership-price-display");
+    if (displayEl) displayEl.textContent = money(membershipPrice);
+    const input = document.getElementById("membership-price-input");
+    if (input && document.activeElement !== input) input.value = membershipPrice.toFixed(2);
+  }, err=> console.error("membership price watch error", err));
+
+  document.getElementById("go-buy-membership-link").addEventListener("click", (e)=>{
+    e.preventDefault();
+    document.getElementById("membership-name-input").value = "";
+    document.getElementById("membership-name-error").style.display = "none";
+    show("buy-membership-view");
+  });
+
+  document.getElementById("membership-back-btn").addEventListener("click", ()=> show("members-login-view"));
+  document.getElementById("membership-requested-back-btn").addEventListener("click", ()=> show("shop-view"));
+
+  document.querySelectorAll("#membership-pay-row .pay-chip").forEach(chip=>{
+    chip.addEventListener("click", ()=>{
+      document.querySelectorAll("#membership-pay-row .pay-chip").forEach(c=>c.classList.remove("active"));
+      chip.classList.add("active");
+      membershipPayment = chip.dataset.pay;
+    });
+  });
+
+  document.getElementById("membership-submit-btn").addEventListener("click", async ()=>{
+    const nameInputEl = document.getElementById("membership-name-input");
+    const name = nameInputEl.value.trim();
+    const errorEl = document.getElementById("membership-name-error");
+    if (!name) {
+      errorEl.style.display = "block";
+      nameInputEl.focus();
+      return;
+    }
+    errorEl.style.display = "none";
+    const btn = document.getElementById("membership-submit-btn");
+    btn.disabled = true;
+    btn.textContent = "Sending…";
+    try {
+      await membershipRequestsRef.add({
+        name, payment: membershipPayment, price: membershipPrice,
+        status: "pending",
+        requestedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      show("membership-requested-view");
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't send your request — try again.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Request membership";
+    }
+  });
+
+  document.getElementById("member-code-enter-btn").addEventListener("click", tryMemberCode);
+  document.getElementById("member-code-input").addEventListener("keydown", (e)=>{
+    if (e.key === "Enter") tryMemberCode();
+  });
+
+  async function tryMemberCode(){
+    const input = document.getElementById("member-code-input");
+    const errorEl = document.getElementById("member-code-error");
+    const code = input.value.trim().toUpperCase();
+    if (!code) return;
+    errorEl.style.display = "none";
+    const btn = document.getElementById("member-code-enter-btn");
+    btn.disabled = true;
+    btn.textContent = "Checking…";
+    try {
+      const snap = await membersRef.where("code","==",code).limit(1).get();
+      if (snap.empty) {
+        errorEl.style.display = "block";
+      } else {
+        const doc = snap.docs[0];
+        currentMember = { name: doc.data().name, code, docId: doc.id };
+        membersRef.doc(doc.id).update({ lastUsed: firebase.firestore.FieldValue.serverTimestamp() }).catch(()=>{});
+        input.value = "";
+        document.getElementById("member-welcome").textContent = currentMember.name;
+        renderMemberGrid();
+        renderMemberTray();
+        show("members-shop-view");
+      }
+    } catch (e) {
+      console.error(e);
+      errorEl.textContent = "Something went wrong — try again.";
+      errorEl.style.display = "block";
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Enter";
+    }
+  }
+
+  document.getElementById("members-exit-btn").addEventListener("click", ()=>{
+    currentMember = null;
+    memberSelection = {};
+    renderTray();
+    show("shop-view");
+  });
+
+  // ---- Members: shop ----
+  const memberGrid = document.getElementById("member-grid");
+  function renderMemberGrid(){
+    memberGrid.innerHTML = "";
+    let bannerCycle = 0;
+    MEMBER_INVENTORY.forEach((it, index)=>{
+      const qty = memberSelection[it.code] || 0;
+      const out = it.stock <= 0;
+      const card = document.createElement("div");
+      card.className = "slot";
+      if (out) card.style.opacity = "0.45";
+      card.innerHTML = `
+        <div class="slot-top">
+          <span class="code-chip">${it.code}</span>
+          <span class="tag-dot" style="background:${TAG_COLOR[it.tag]}"></span>
+        </div>
+        <div class="slot-name">${it.name}</div>
+        <div class="slot-price">${money(it.price)}</div>
+        <div class="slot-stock ${it.stock <= 3 && it.stock > 0 ? 'low' : ''}">${out ? 'Out of stock' : `${it.stock} left`}</div>
+        <button class="press-btn" ${(out || qty >= it.stock) ? "disabled" : ""} data-code="${it.code}">
+          ${out ? "SOLD OUT" : (qty >= it.stock ? `MAX (${qty})` : (qty > 0 ? `+1 (${qty})` : "SELECT"))}
+        </button>
+        ${qty > 0 ? `<button class="minus-btn" data-code="${it.code}">remove one</button>` : ""}
+      `;
+      memberGrid.appendChild(card);
+
+      if (currentBanners.length > 0 && (index + 1) % 4 === 0 && index !== MEMBER_INVENTORY.length - 1) {
+        const banner = currentBanners[bannerCycle % currentBanners.length];
+        bannerCycle++;
+        const bannerEl = document.createElement("div");
+        bannerEl.className = "grid-banner";
+        bannerEl.textContent = `📣 ${banner.text || ""}`;
+        memberGrid.appendChild(bannerEl);
+      }
+    });
+    memberGrid.querySelectorAll(".press-btn:not([disabled])").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const code = btn.dataset.code;
+        const it = MEMBER_INVENTORY.find(i=>i.code===code);
+        if ((memberSelection[code]||0) >= it.stock) return;
+        memberSelection[code] = (memberSelection[code]||0)+1;
+        renderMemberGrid();
+        renderMemberTray();
+      });
+    });
+    memberGrid.querySelectorAll(".minus-btn").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const code = btn.dataset.code;
+        if (memberSelection[code] > 1) memberSelection[code]--;
+        else delete memberSelection[code];
+        renderMemberGrid();
+        renderMemberTray();
+      });
+    });
+  }
+
+  function memberItems(){
+    return Object.entries(memberSelection).filter(([,q])=>q>0);
+  }
+  function memberTotal(){
+    return memberItems().reduce((sum,[code,q])=>{
+      const p = MEMBER_INVENTORY.find(i=>i.code===code)?.price || 0;
+      return sum + p*q;
+    },0);
+  }
+  function renderMemberTray(){
+    // Members view reuses the bottom tray
+    const items = memberItems();
+    const count = items.reduce((s,[,q])=>s+q,0);
+    trayCount.textContent = count === 0 ? "Empty — pick a code above" : `${count} item${count>1?"s":""} selected`;
+    trayTotal.textContent = money(memberTotal());
+    checkoutBtn.disabled = count === 0;
+    checkoutBtn.dataset.mode = "member";
+  }
+
+  document.getElementById("member-back-btn").addEventListener("click", ()=> show("members-shop-view"));
+
+  document.querySelectorAll("#member-pay-row .pay-chip").forEach(chip=>{
+    chip.addEventListener("click", ()=>{
+      document.querySelectorAll("#member-pay-row .pay-chip").forEach(c=>c.classList.remove("active"));
+      chip.classList.add("active");
+      memberPayment = chip.dataset.pay;
+    });
+  });
+
+  document.getElementById("member-place-order-btn").addEventListener("click", async ()=>{
+    const items = memberItems();
+    const overName = findOverStock(items, MEMBER_INVENTORY);
+    if (overName) {
+      alert(`Sorry, ${overName} doesn't have enough stock left. Please adjust your order.`);
+      renderMemberGrid();
+      renderMemberTray();
+      show("members-shop-view");
+      return;
+    }
+
+    const id = Math.random().toString(36).slice(2,6).toUpperCase();
+    const rawTotal = memberTotal();
+    const total = finalTotal(rawTotal, memberAppliedDiscount);
+    const orderItems = items.map(([code,qty])=>{
+      const it = MEMBER_INVENTORY.find(i=>i.code===code);
+      return { code, name: it.name, qty, price: it.price };
+    });
+    const btn = document.getElementById("member-place-order-btn");
+    btn.disabled = true;
+    btn.textContent = "Placing…";
+    try {
+      const batch = db.batch();
+      const orderDocRef = ordersRef.doc();
+      batch.set(orderDocRef, {
+        id, name: currentMember.name, payment: memberPayment,
+        items: orderItems,
+        total: Number(total.toFixed(2)),
+        time: firebase.firestore.FieldValue.serverTimestamp(),
+        status: "pending",
+        isPremium: true,
+        memberCode: currentMember.code,
+        discountCode: memberAppliedDiscount ? memberAppliedDiscount.code : null,
+        discountPct: memberAppliedDiscount ? memberAppliedDiscount.pct : 0
+      });
+      orderItems.forEach(it=>{
+        batch.update(memberInventoryRef.doc(it.code), { stock: firebase.firestore.FieldValue.increment(-it.qty) });
+      });
+      await batch.commit();
+      if (memberAppliedDiscount) {
+        discountCodesRef.doc(memberAppliedDiscount.code).update({ usageCount: firebase.firestore.FieldValue.increment(1) }).catch(()=>{});
+      }
+      document.getElementById("member-confirm-code").textContent = id;
+      watchOrderStatus(orderDocRef, true);
+      show("members-done-view");
+      sendOrderEmail(id, currentMember.name, orderItems, total, memberPayment);
+    } catch (e) {
+      alert("Couldn't place your order — check your connection and try again.");
+      console.error(e);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Place order";
+    }
+  });
+
+  document.getElementById("member-resend-email-btn").addEventListener("click", ()=>{
+    if (lastMailtoLink) window.location.href = lastMailtoLink;
+  });
+
+  document.getElementById("member-pay-card-btn").addEventListener("click", async ()=>{
+    const items = memberItems();
+    const overName = findOverStock(items, MEMBER_INVENTORY);
+    if (overName) {
+      alert(`Sorry, ${overName} doesn't have enough stock left. Please adjust your order.`);
+      renderMemberGrid();
+      renderMemberTray();
+      show("members-shop-view");
+      return;
+    }
+
+    const id = Math.random().toString(36).slice(2,6).toUpperCase();
+    const rawTotal = memberTotal();
+    const total = finalTotal(rawTotal, memberAppliedDiscount);
+    const orderItems = items.map(([code,qty])=>{
+      const it = MEMBER_INVENTORY.find(i=>i.code===code);
+      return { code, name: it.name, qty, price: it.price };
+    });
+
+    const pendingOrder = {
+      kind: "member", id, name: currentMember.name, orderItems, total,
+      memberCode: currentMember.code,
+      discountCode: memberAppliedDiscount ? memberAppliedDiscount.code : null,
+      discountPct: memberAppliedDiscount ? memberAppliedDiscount.pct : 0
+    };
+    sessionStorage.setItem(`pendingOrder_${id}`, JSON.stringify(pendingOrder));
+
+    await goToStripeCheckout(orderItems, currentMember.name, id, "member-pay-card-btn", "member-card-pay-status");
+  });
+
+  document.getElementById("member-new-order-btn").addEventListener("click", ()=>{
+    memberSelection = {};
+    document.getElementById("member-discount-code-input").value = "";
+    document.getElementById("member-discount-applied").style.display = "none";
+    memberAppliedDiscount = null;
+    updateMemberShopBadge();
+    renderMemberGrid();
+    renderMemberTray();
+    show("members-shop-view");
+  });
+
+  // ---- Owner: manage members ----
+  document.getElementById("add-member-btn").addEventListener("click", async ()=>{
+    const input = document.getElementById("new-member-name");
+    const phoneInput = document.getElementById("new-member-phone");
+    const carrierInput = document.getElementById("new-member-carrier");
+    const name = input.value.trim();
+    if (!name) { input.focus(); return; }
+    const btn = document.getElementById("add-member-btn");
+    btn.disabled = true;
+    btn.textContent = "Adding…";
+    try {
+      const code = generateCode();
+      await membersRef.add({
+        name, code,
+        phone: phoneInput.value.trim(),
+        carrier: carrierInput.value,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        lastUsed: null
+      });
+      input.value = "";
+      phoneInput.value = "";
+      carrierInput.value = "";
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't add member — try again.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Generate code";
+    }
+  });
+
+  function renderMembersList(){
+    const list = document.getElementById("members-list");
+    unsubscribeMembers = membersRef.orderBy("createdAt","desc").onSnapshot(snapshot=>{
+      if (snapshot.empty) {
+        list.innerHTML = `<p style="color:var(--muted2)">No members yet.</p>`;
+        return;
+      }
+      list.innerHTML = snapshot.docs.map(doc=>{
+        const m = doc.data();
+        const last = m.lastUsed && m.lastUsed.toDate ? `last used ${m.lastUsed.toDate().toLocaleString()}` : "never used";
+        const canText = m.phone && m.carrier;
+        return `
+          <div class="order-row">
+            <div>
+              <div style="font-weight:700;">${m.name}</div>
+              <div style="font-size:13px; color:var(--muted2); font-family:'IBM Plex Mono',monospace;">${m.code} · ${last}</div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              ${canText ? `<button class="ghost-btn" data-textmember="${doc.id}">Text</button>` : ""}
+              <button class="ghost-btn" data-chatmember="${doc.id}" data-chatname="${m.name}" data-chatcode="${m.code}">💬 Chat</button>
+              <button class="ghost-btn" data-revoke="${doc.id}">Revoke</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+      list.querySelectorAll("button[data-textmember]").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const doc = snapshot.docs.find(d=>d.id===btn.dataset.textmember);
+          if (!doc) return;
+          const m = doc.data();
+          const message = prompt(`Text to ${m.name}:`, "");
+          if (!message) return;
+          const gatewayAddr = `${m.phone}@${m.carrier}`;
+          const body = encodeURIComponent(message);
+          window.location.href = `mailto:${gatewayAddr}?subject=&body=${body}`;
+        });
+      });
+      list.querySelectorAll("button[data-revoke]").forEach(btn=>{
+        btn.addEventListener("click", async ()=>{
+          if (!confirm("Revoke this member's code? They'll lose access immediately.")) return;
+          btn.disabled = true;
+          try {
+            await membersRef.doc(btn.dataset.revoke).delete();
+          } catch (e) {
+            console.error(e);
+            btn.disabled = false;
+          }
+        });
+      });
+      list.querySelectorAll("button[data-chatmember]").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          openOwnerMemberChat(btn.dataset.chatcode, btn.dataset.chatname);
+        });
+      });
+    }, err=> console.error(err));
+  }
+
+  // ---- Member chat (real-time, per-member private thread with owners) ----
+  let unsubscribeMemberChat = null;
+
+  document.getElementById("member-open-chat-btn").addEventListener("click", ()=>{
+    if (!currentMember) return;
+    document.getElementById("member-chat-overlay").classList.remove("hidden");
+    if (unsubscribeMemberChat) return; // already listening
+    unsubscribeMemberChat = memberMessagesRef
+      .where("memberCode","==",currentMember.code)
+      .orderBy("createdAt","asc")
+      .onSnapshot(snapshot=>{
+        const box = document.getElementById("member-chat-messages");
+        if (snapshot.empty) {
+          box.innerHTML = `<p style="color:var(--muted2)">No messages yet — say hi!</p>`;
+          return;
+        }
+        box.innerHTML = snapshot.docs.map(doc=>{
+          const m = doc.data();
+          const isMine = m.sender === "member";
+          const time = m.createdAt && m.createdAt.toDate ? m.createdAt.toDate().toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}) : "";
+          return `
+            <div class="chat-bubble ${isMine ? 'chat-bubble-mine' : ''}">
+              <div class="chat-sender">${isMine ? "You" : "Owners"}</div>
+              <div class="chat-text">${(m.message||"").replace(/</g,"&lt;")}</div>
+              <div class="chat-time">${time}</div>
+            </div>
+          `;
+        }).join("");
+        box.scrollTop = box.scrollHeight;
+      }, err=> console.error(err));
+  });
+
+  document.getElementById("member-chat-close-btn").addEventListener("click", ()=>{
+    document.getElementById("member-chat-overlay").classList.add("hidden");
+  });
+
+  async function sendMemberChatMessage(){
+    if (!currentMember) return;
+    const input = document.getElementById("member-chat-input");
+    const message = input.value.trim();
+    if (!message) return;
+    const btn = document.getElementById("member-chat-send-btn");
+    btn.disabled = true;
+    try {
+      await memberMessagesRef.add({
+        memberCode: currentMember.code,
+        senderName: currentMember.name,
+        sender: "member",
+        message,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      input.value = "";
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't send — try again.");
+    } finally {
+      btn.disabled = false;
+    }
+  }
+  document.getElementById("member-chat-send-btn").addEventListener("click", sendMemberChatMessage);
+  document.getElementById("member-chat-input").addEventListener("keydown", (e)=>{
+    if (e.key === "Enter") sendMemberChatMessage();
+  });
+
+  // ---- Owner-side per-member chat ----
+  let unsubscribeOwnerMemberChat = null;
+  let currentChatMemberCode = null;
+
+  function openOwnerMemberChat(memberCode, memberName){
+    currentChatMemberCode = memberCode;
+    document.getElementById("owner-chat-member-name").textContent = `Chat with ${memberName}`;
+    document.getElementById("owner-member-chat-overlay").classList.remove("hidden");
+    if (unsubscribeOwnerMemberChat) { unsubscribeOwnerMemberChat(); unsubscribeOwnerMemberChat = null; }
+    unsubscribeOwnerMemberChat = memberMessagesRef
+      .where("memberCode","==",memberCode)
+      .orderBy("createdAt","asc")
+      .onSnapshot(snapshot=>{
+        const box = document.getElementById("owner-chat-messages");
+        if (snapshot.empty) {
+          box.innerHTML = `<p style="color:var(--muted2)">No messages yet.</p>`;
+          return;
+        }
+        box.innerHTML = snapshot.docs.map(doc=>{
+          const m = doc.data();
+          const isMine = m.sender === "owner";
+          const time = m.createdAt && m.createdAt.toDate ? m.createdAt.toDate().toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}) : "";
+          return `
+            <div class="chat-bubble ${isMine ? 'chat-bubble-mine' : ''}">
+              <div class="chat-sender">${isMine ? "You" : memberName}</div>
+              <div class="chat-text">${(m.message||"").replace(/</g,"&lt;")}</div>
+              <div class="chat-time">${time}</div>
+            </div>
+          `;
+        }).join("");
+        box.scrollTop = box.scrollHeight;
+      }, err=> console.error(err));
+  }
+
+  document.getElementById("owner-chat-close-btn").addEventListener("click", ()=>{
+    document.getElementById("owner-member-chat-overlay").classList.add("hidden");
+    if (unsubscribeOwnerMemberChat) { unsubscribeOwnerMemberChat(); unsubscribeOwnerMemberChat = null; }
+    currentChatMemberCode = null;
+  });
+
+  async function sendOwnerChatMessage(){
+    if (!currentChatMemberCode) return;
+    const input = document.getElementById("owner-chat-input");
+    const message = input.value.trim();
+    if (!message) return;
+    const btn = document.getElementById("owner-chat-send-btn");
+    btn.disabled = true;
+    try {
+      await memberMessagesRef.add({
+        memberCode: currentChatMemberCode,
+        senderName: "Owner",
+        sender: "owner",
+        message,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      input.value = "";
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't send — try again.");
+    } finally {
+      btn.disabled = false;
+    }
+  }
+  document.getElementById("owner-chat-send-btn").addEventListener("click", sendOwnerChatMessage);
+  document.getElementById("owner-chat-input").addEventListener("keydown", (e)=>{
+    if (e.key === "Enter") sendOwnerChatMessage();
+  });
+
+  // ---- Membership price + requests ----
+  document.getElementById("membership-price-save-btn").addEventListener("click", async ()=>{
+    const input = document.getElementById("membership-price-input");
+    const newPrice = Math.max(0, parseFloat(input.value) || 0);
+    input.value = newPrice.toFixed(2);
+    const btn = document.getElementById("membership-price-save-btn");
+    btn.disabled = true;
+    btn.textContent = "Saving…";
+    try {
+      await settingsRef.doc("membership").set({ price: newPrice });
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't save price — try again.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Save price";
+    }
+  });
+
+  let unsubscribeMembershipRequests = null;
+  function renderMembershipRequests(){
+    const list = document.getElementById("membership-requests-list");
+    unsubscribeMembershipRequests = membershipRequestsRef.orderBy("requestedAt","desc").onSnapshot(snapshot=>{
+      if (snapshot.empty) {
+        list.innerHTML = `<p style="color:var(--muted2)">No membership requests yet.</p>`;
+        return;
+      }
+      list.innerHTML = snapshot.docs.map(doc=>{
+        const r = doc.data();
+        const time = r.requestedAt && r.requestedAt.toDate ? r.requestedAt.toDate().toLocaleString() : "";
+        if (r.status === "approved") {
+          return `
+            <div class="order-row">
+              <div>
+                <div style="font-weight:700;">${r.name} <span class="order-status-fulfilled">approved</span></div>
+                <div style="font-size:13px; color:var(--muted2); font-family:'IBM Plex Mono',monospace;">Code: ${r.code || "—"} · ${money(r.price)} via ${r.payment} · ${time}</div>
+              </div>
+            </div>
+          `;
+        }
+        return `
+          <div class="order-row">
+            <div>
+              <div style="font-weight:700;">${r.name} <span class="order-status-pending">pending</span></div>
+              <div style="font-size:13px; color:var(--muted2);">${money(r.price)} via ${r.payment} · ${time}</div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="confirm-btn" data-approve="${doc.id}" data-name="${r.name.replace(/"/g,'&quot;')}">Approve</button>
+              <button class="ghost-btn" data-reject="${doc.id}">Reject</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      list.querySelectorAll("button[data-approve]").forEach(btn=>{
+        btn.addEventListener("click", async ()=>{
+          btn.disabled = true;
+          btn.textContent = "…";
+          try {
+            const code = generateCode();
+            const name = btn.dataset.name;
+            await membersRef.add({ name, code, createdAt: firebase.firestore.FieldValue.serverTimestamp(), lastUsed: null });
+            await membershipRequestsRef.doc(btn.dataset.approve).update({ status: "approved", code });
+          } catch (e) {
+            console.error(e);
+            alert("Couldn't approve — try again.");
+            btn.disabled = false;
+            btn.textContent = "Approve";
+          }
+        });
+      });
+      list.querySelectorAll("button[data-reject]").forEach(btn=>{
+        btn.addEventListener("click", async ()=>{
+          if (!confirm("Reject this membership request?")) return;
+          btn.disabled = true;
+          try {
+            await membershipRequestsRef.doc(btn.dataset.reject).delete();
+          } catch (e) {
+            console.error(e);
+            btn.disabled = false;
+          }
+        });
+      });
+    }, err=> console.error(err));
+  }
+
+  // ---- Client log ----
+  const clientsRef = db.collection("clients");
+  const expensesRef = db.collection("expenses");
+  const discountCodesRef = db.collection("discountCodes");
+  let unsubscribeExpenses = null;
+  let lastOrdersForExport = [];
+  let lastExpensesForExport = [];
+
+  function downloadCsv(filename, rows){
+    const csv = rows.map(row =>
+      row.map(cell => {
+        const s = String(cell ?? "");
+        return /[",\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s;
+      }).join(",")
+    ).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  document.getElementById("export-orders-btn").addEventListener("click", ()=>{
+    const rows = [["Order ID","Name","Items","Total","Payment","Status","Premium","Placed At"]];
+    lastOrdersForExport.forEach(o=>{
+      const itemsStr = (o.items||[]).map(it=>`${it.qty}x ${it.name}`).join("; ");
+      const time = o.time && o.time.toDate ? o.time.toDate().toLocaleString() : "";
+      rows.push([o.id, o.name, itemsStr, o.total, o.payment, o.status, o.isPremium ? "Yes" : "No", time]);
+    });
+    downloadCsv(`orders-${new Date().toISOString().slice(0,10)}.csv`, rows);
+  });
+
+  document.getElementById("export-expenses-btn").addEventListener("click", ()=>{
+    const rows = [["Description","Amount","Logged At"]];
+    lastExpensesForExport.forEach(e=>{
+      const time = e.createdAt && e.createdAt.toDate ? e.createdAt.toDate().toLocaleString() : "";
+      rows.push([e.desc, e.amount, time]);
+    });
+    downloadCsv(`expenses-${new Date().toISOString().slice(0,10)}.csv`, rows);
+  });
+
+  let lastAllTimeExpenses = 0;
+  let lastTodayExpenses = 0;
+
+  document.getElementById("add-expense-btn").addEventListener("click", async ()=>{
+    const descEl = document.getElementById("new-expense-desc");
+    const amountEl = document.getElementById("new-expense-amount");
+    const desc = descEl.value.trim();
+    const amount = Math.max(0, parseFloat(amountEl.value) || 0);
+    if (!desc || amount <= 0) {
+      if (!desc) descEl.focus(); else amountEl.focus();
+      return;
+    }
+    const btn = document.getElementById("add-expense-btn");
+    btn.disabled = true;
+    btn.textContent = "Logging…";
+    try {
+      await expensesRef.add({ desc, amount, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+      descEl.value = "";
+      amountEl.value = "";
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't log expense — try again.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "+ Log expense";
+    }
+  });
+
+  function renderExpenses(){
+    const list = document.getElementById("expenses-list");
+    unsubscribeExpenses = expensesRef.orderBy("createdAt","desc").onSnapshot(snapshot=>{
+      const expenses = [];
+      snapshot.forEach(doc=> expenses.push({ docId: doc.id, ...doc.data() }));
+      lastExpensesForExport = expenses;
+
+      const totalExpenses = expenses.reduce((s,e)=> s + (e.amount||0), 0);
+      const startOfToday = new Date();
+      startOfToday.setHours(0,0,0,0);
+      const todaysExpenses = expenses.filter(e=>{
+        const t = e.createdAt && e.createdAt.toDate ? e.createdAt.toDate() : null;
+        return t && t >= startOfToday;
+      });
+      lastAllTimeExpenses = totalExpenses;
+      lastTodayExpenses = todaysExpenses.reduce((s,e)=> s + (e.amount||0), 0);
+      renderProfitStats();
+
+      if (expenses.length === 0) {
+        list.innerHTML = `<p style="color:var(--muted2)">No expenses logged yet.</p>`;
+        return;
+      }
+      list.innerHTML = expenses.map(e=>{
+        const time = e.createdAt && e.createdAt.toDate ? e.createdAt.toDate().toLocaleString() : "";
+        return `
+          <div class="order-row">
+            <div>
+              <div style="font-weight:700;">${e.desc}</div>
+              <div style="font-size:13px; color:var(--muted2);">${money(e.amount)} · ${time}</div>
+            </div>
+            <button class="ghost-btn" data-delexpense="${e.docId}">Delete</button>
+          </div>
+        `;
+      }).join("");
+      list.querySelectorAll("button[data-delexpense]").forEach(btn=>{
+        btn.addEventListener("click", async ()=>{
+          if (!confirm("Delete this expense?")) return;
+          btn.disabled = true;
+          try {
+            await expensesRef.doc(btn.dataset.delexpense).delete();
+          } catch (e) {
+            console.error(e);
+            btn.disabled = false;
+          }
+        });
+      });
+    }, err=> console.error(err));
+  }
+
+  let unsubscribeClients = null;
+
+  document.getElementById("add-client-btn").addEventListener("click", async ()=>{
+    const nameEl = document.getElementById("new-client-name");
+    const phoneEl = document.getElementById("new-client-phone");
+    const carrierEl = document.getElementById("new-client-carrier");
+    const noteEl = document.getElementById("new-client-note");
+    const name = nameEl.value.trim();
+    const phone = phoneEl.value.replace(/\D/g,"").trim();
+    const carrier = carrierEl.value;
+    const note = noteEl.value.trim();
+    if (!name && !phone) { nameEl.focus(); return; }
+    const btn = document.getElementById("add-client-btn");
+    btn.disabled = true;
+    btn.textContent = "Adding…";
+    try {
+      await clientsRef.add({ name, phone, carrier, note, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+      nameEl.value = "";
+      phoneEl.value = "";
+      carrierEl.value = "";
+      noteEl.value = "";
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't add contact — try again.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Add contact";
+    }
+  });
+
+  function renderClientsList(){
+    const list = document.getElementById("clients-list");
+    unsubscribeClients = clientsRef.orderBy("createdAt","desc").onSnapshot(snapshot=>{
+      if (snapshot.empty) {
+        list.innerHTML = `<p style="color:var(--muted2)">No contacts yet.</p>`;
+        return;
+      }
+      list.innerHTML = snapshot.docs.map(doc=>{
+        const c = doc.data();
+        const canText = c.phone && c.carrier;
+        return `
+          <div class="order-row">
+            <div>
+              <div style="font-weight:700;">${c.name || "(no name)"}</div>
+              <div style="font-size:13px; color:var(--muted2); font-family:'IBM Plex Mono',monospace;">${c.phone || "—"}</div>
+              ${c.note ? `<div style="font-size:13px; color:var(--muted2);">${c.note}</div>` : ""}
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              ${canText ? `<button class="ghost-btn" data-textclient="${doc.id}">Text</button>` : ""}
+              <button class="ghost-btn" data-delclient="${doc.id}">Delete</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+      list.querySelectorAll("button[data-textclient]").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const doc = snapshot.docs.find(d=>d.id===btn.dataset.textclient);
+          if (!doc) return;
+          const c = doc.data();
+          const message = prompt(`Text to ${c.name}:`, "");
+          if (!message) return;
+          const gatewayAddr = `${c.phone}@${c.carrier}`;
+          const body = encodeURIComponent(message);
+          window.location.href = `mailto:${gatewayAddr}?subject=&body=${body}`;
+        });
+      });
+      list.querySelectorAll("button[data-delclient]").forEach(btn=>{
+        btn.addEventListener("click", async ()=>{
+          if (!confirm("Delete this contact?")) return;
+          btn.disabled = true;
+          try {
+            await clientsRef.doc(btn.dataset.delclient).delete();
+          } catch (e) {
+            console.error(e);
+            btn.disabled = false;
+          }
+        });
+      });
+    }, err=> console.error(err));
+  }
+
+  function stockRowHtml(item, collectionName){
+    return `
+      <div class="stock-row" style="flex-direction:column; align-items:stretch; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="code-chip" style="flex-shrink:0;">${item.code}</span>
+          <input class="receipt-name-input" style="flex:1; background:var(--panel-dark); border:1px solid var(--line); border-radius:8px; padding:8px 10px; color:var(--cream); font-size:14px;" value="${(item.name||"").replace(/"/g,'&quot;')}" data-namecode="${item.code}" data-namecoll="${collectionName}" />
+          <button class="ghost-btn" data-delitem="${item.code}" data-delcoll="${collectionName}" style="flex-shrink:0;">Delete</button>
+        </div>
+        <div class="stock-input-wrap">
+          <span style="font-size:12px; color:var(--muted);">$</span>
+          <input type="number" min="0" step="0.25" class="stock-input" value="${item.price.toFixed(2)}" data-pricecode="${item.code}" data-pricecoll="${collectionName}" />
+          <span style="font-size:12px; color:var(--muted);">×</span>
+          <input type="number" min="0" class="stock-input" value="${item.stock}" data-code="${item.code}" data-coll="${collectionName}" />
+          <button class="stock-save-btn" data-savecode="${item.code}" data-savecoll="${collectionName}">Save</button>
+          <span class="stock-saved" data-savedcode="${item.code}" data-savedcoll="${collectionName}" style="display:none;">Saved</span>
+        </div>
+      </div>
+    `;
+  }
+
+  function wireStockSaveButtons(container){
+    container.querySelectorAll("button[data-savecode]").forEach(btn=>{
+      btn.addEventListener("click", async ()=>{
+        const code = btn.dataset.savecode;
+        const coll = btn.dataset.savecoll;
+        const stockInput = container.querySelector(`input[data-code="${code}"][data-coll="${coll}"]`);
+        const priceInput = container.querySelector(`input[data-pricecode="${code}"][data-pricecoll="${coll}"]`);
+        const nameInput = container.querySelector(`input[data-namecode="${code}"][data-namecoll="${coll}"]`);
+        const newStock = Math.max(0, parseInt(stockInput.value, 10) || 0);
+        const newPrice = Math.max(0, parseFloat(priceInput.value) || 0);
+        const newName = nameInput.value.trim();
+        if (!newName) { nameInput.focus(); return; }
+        stockInput.value = newStock;
+        priceInput.value = newPrice.toFixed(2);
+        btn.disabled = true;
+        btn.textContent = "…";
+        try {
+          const ref = coll === "member" ? memberInventoryRef : inventoryRef;
+          await ref.doc(code).update({ stock: newStock, price: newPrice, name: newName });
+          const savedEl = container.querySelector(`span[data-savedcode="${code}"][data-savedcoll="${coll}"]`);
+          if (savedEl) {
+            savedEl.style.display = "inline";
+            setTimeout(()=> savedEl.style.display = "none", 1500);
+          }
+        } catch (e) {
+          console.error(e);
+          alert("Couldn't update stock — try again.");
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Save";
+        }
+      });
+    });
+
+    container.querySelectorAll("button[data-delitem]").forEach(btn=>{
+      btn.addEventListener("click", async ()=>{
+        const code = btn.dataset.delitem;
+        const coll = btn.dataset.delcoll;
+        if (!confirm(`Remove this item permanently? Classmates won't be able to order it anymore.`)) return;
+        btn.disabled = true;
+        btn.textContent = "…";
+        try {
+          const ref = coll === "member" ? memberInventoryRef : inventoryRef;
+          await ref.doc(code).delete();
+        } catch (e) {
+          console.error(e);
+          alert("Couldn't delete item — try again.");
+          btn.disabled = false;
+          btn.textContent = "Delete";
+        }
+      });
+    });
+  }
+
+  document.getElementById("reset-regular-btn").addEventListener("click", async ()=>{
+    if (!confirm("Replace all machine items with the current code list? This deletes any items not in that list and resets stock counts to the defaults in the code.")) return;
+    const btn = document.getElementById("reset-regular-btn");
+    btn.disabled = true;
+    btn.textContent = "Resetting…";
+    try {
+      const existing = await inventoryRef.get();
+      const batch = db.batch();
+      existing.docs.forEach(d=> batch.delete(d.ref));
+      DEFAULT_INVENTORY.forEach(item=> batch.set(inventoryRef.doc(item.code), item));
+      await batch.commit();
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't reset inventory — try again.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Reset machine items to code list";
+    }
+  });
+
+  document.getElementById("reset-member-btn").addEventListener("click", async ()=>{
+    if (!confirm("Replace all member items with the current code list? This deletes any items not in that list and resets stock counts to the defaults in the code.")) return;
+    const btn = document.getElementById("reset-member-btn");
+    btn.disabled = true;
+    btn.textContent = "Resetting…";
+    try {
+      const existing = await memberInventoryRef.get();
+      const batch = db.batch();
+      existing.docs.forEach(d=> batch.delete(d.ref));
+      DEFAULT_MEMBER_INVENTORY.forEach(item=> batch.set(memberInventoryRef.doc(item.code), item));
+      await batch.commit();
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't reset member inventory — try again.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Reset member items to code list";
+    }
+  });
+
+  function nextItemCode(existingItems, prefix){
+    let n = 1;
+    const used = new Set(existingItems.map(it=>it.code));
+    while (used.has(`${prefix}${n}`)) n++;
+    return `${prefix}${n}`;
+  }
+
+  async function addNewItem(ref, existingItems, prefix, nameEl, priceEl, stockEl, btnEl){
+    const name = nameEl.value.trim();
+    const price = Math.max(0, parseFloat(priceEl.value) || 0);
+    const stock = Math.max(0, parseInt(stockEl.value, 10) || 0);
+    if (!name) { nameEl.focus(); return; }
+    btnEl.disabled = true;
+    btnEl.textContent = "Adding…";
+    try {
+      const code = nextItemCode(existingItems, prefix);
+      await ref.doc(code).set({ code, name, price, stock, tag: "sweet" });
+      nameEl.value = "";
+      priceEl.value = "";
+      stockEl.value = "";
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't add item — try again.");
+    } finally {
+      btnEl.disabled = false;
+      btnEl.textContent = "+ Add item";
+    }
+  }
+
+  document.getElementById("add-item-regular-btn").addEventListener("click", ()=>{
+    addNewItem(
+      inventoryRef, INVENTORY, "N",
+      document.getElementById("new-item-name-regular"),
+      document.getElementById("new-item-price-regular"),
+      document.getElementById("new-item-stock-regular"),
+      document.getElementById("add-item-regular-btn")
+    );
+  });
+
+  document.getElementById("add-item-member-btn").addEventListener("click", ()=>{
+    addNewItem(
+      memberInventoryRef, MEMBER_INVENTORY, "N",
+      document.getElementById("new-item-name-member"),
+      document.getElementById("new-item-price-member"),
+      document.getElementById("new-item-stock-member"),
+      document.getElementById("add-item-member-btn")
+    );
+  });
+
+  // ---- Revenue split ----
+  const revenueSplitRef = db.collection("settings").doc("revenueSplit");
+  let lastAllTimeRevenue = 0;
+  let lastTodayRevenue = 0;
+  let splitPeople = [
+    { id: 1, name: "Partner A", pct: "60" },
+    { id: 2, name: "Partner B", pct: "40" },
+  ];
+  let splitNextId = 3;
+  let splitLoadedFromServer = false;
+
+  async function loadSavedSplit(){
+    try {
+      const doc = await revenueSplitRef.get();
+      if (doc.exists && Array.isArray(doc.data().people) && doc.data().people.length) {
+        splitPeople = doc.data().people;
+        splitNextId = Math.max(...splitPeople.map(p=>p.id), 0) + 1;
+      }
+    } catch (e) {
+      console.error("Couldn't load saved split", e);
+    }
+    splitLoadedFromServer = true;
+    renderSplit();
+  }
+
+  document.getElementById("split-save-btn").addEventListener("click", async ()=>{
+    const btn = document.getElementById("split-save-btn");
+    btn.disabled = true;
+    btn.textContent = "Saving…";
+    try {
+      await revenueSplitRef.set({ people: splitPeople, savedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      const savedEl = document.getElementById("split-saved-status");
+      savedEl.style.display = "block";
+      setTimeout(()=> savedEl.style.display = "none", 2000);
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't save — try again.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Save";
+    }
+  });
+
+  function splitMoney(n){
+    const v = isFinite(n) ? n : 0;
+    return v.toLocaleString("en-US", { style: "currency", currency: "USD" });
+  }
+
+  function renderSplit(){
+    const list = document.getElementById("split-people-list");
+    const revenueInput = document.getElementById("split-revenue-input");
+    const rev = parseFloat(revenueInput.value) || 0;
+    if (!list) return;
+
+    list.innerHTML = splitPeople.map(p=>{
+      const pct = parseFloat(p.pct) || 0;
+      const share = rev * (pct/100);
+      return `
+        <div class="stock-row">
+          <input class="text" style="flex:1; min-width:100px;" value="${(p.name||"").replace(/"/g,'&quot;')}" data-splitname="${p.id}" placeholder="Name" />
+          <div class="stock-input-wrap">
+            <input type="number" min="0" class="stock-input" style="width:60px;" value="${p.pct}" data-splitpct="${p.id}" placeholder="0" />
+            <span style="font-size:12px; color:var(--muted);">%</span>
+            <span style="font-family:'IBM Plex Mono',monospace; color:var(--gold); font-weight:700; min-width:80px; text-align:right; display:inline-block;">${splitMoney(share)}</span>
+            <button class="ghost-btn" data-splitremove="${p.id}" ${splitPeople.length<=1?"disabled":""}>✕</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    list.querySelectorAll("input[data-splitname]").forEach(inp=>{
+      inp.addEventListener("input", ()=>{
+        const id = parseInt(inp.dataset.splitname,10);
+        const person = splitPeople.find(p=>p.id===id);
+        if (person) person.name = inp.value;
+      });
+    });
+    list.querySelectorAll("input[data-splitpct]").forEach(inp=>{
+      inp.addEventListener("input", ()=>{
+        const id = parseInt(inp.dataset.splitpct,10);
+        const person = splitPeople.find(p=>p.id===id);
+        if (person) { person.pct = inp.value; renderSplit(); }
+      });
+    });
+    list.querySelectorAll("button[data-splitremove]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const id = parseInt(btn.dataset.splitremove,10);
+        if (splitPeople.length>1) { splitPeople = splitPeople.filter(p=>p.id!==id); renderSplit(); }
+      });
+    });
+
+    const totalPct = splitPeople.reduce((s,p)=> s+(parseFloat(p.pct)||0), 0);
+    const remaining = Math.round((100-totalPct)*100)/100;
+    const statusEl = document.getElementById("split-status");
+    if (Math.abs(remaining) < 0.005) {
+      statusEl.textContent = "✓ Fully allocated";
+      statusEl.style.color = "var(--healthy)";
+    } else if (remaining < 0) {
+      statusEl.textContent = `Over by ${Math.abs(remaining).toFixed(2)}% — reduce a share`;
+      statusEl.style.color = "var(--sweet)";
+    } else {
+      statusEl.textContent = `${remaining.toFixed(2)}% unassigned`;
+      statusEl.style.color = "var(--muted2)";
+    }
+  }
+
+  document.getElementById("split-revenue-input").addEventListener("input", renderSplit);
+  document.getElementById("split-add-person-btn").addEventListener("click", ()=>{
+    const letter = String.fromCharCode(65 + splitPeople.length);
+    splitPeople.push({ id: splitNextId++, name: `Partner ${letter}`, pct: "" });
+    renderSplit();
+  });
+  document.getElementById("split-even-btn").addEventListener("click", ()=>{
+    const n = splitPeople.length;
+    if (n === 0) return;
+    const base = Math.floor((100/n)*100)/100;
+    const remainder = Math.round((100-base*n)*100)/100;
+    splitPeople = splitPeople.map((p,i)=> ({ ...p, pct: String(i===0 ? base+remainder : base) }));
+    renderSplit();
+  });
+  document.getElementById("split-use-today-btn").addEventListener("click", ()=>{
+    document.getElementById("split-revenue-input").value = lastTodayRevenue.toFixed(2);
+    renderSplit();
+  });
+  document.getElementById("split-use-alltime-btn").addEventListener("click", ()=>{
+    document.getElementById("split-revenue-input").value = lastAllTimeRevenue.toFixed(2);
+    renderSplit();
+  });
+
+  function renderStockManager(){
+    const regularEl = document.getElementById("stock-list-regular");
+    const memberEl = document.getElementById("stock-list-member");
+    if (!regularEl || !memberEl) return;
+    regularEl.innerHTML = INVENTORY.length
+      ? INVENTORY.map(it=> stockRowHtml(it, "regular")).join("")
+      : `<p style="color:var(--muted2)">Loading…</p>`;
+    memberEl.innerHTML = MEMBER_INVENTORY.length
+      ? MEMBER_INVENTORY.map(it=> stockRowHtml(it, "member")).join("")
+      : `<p style="color:var(--muted2)">Loading…</p>`;
+    wireStockSaveButtons(regularEl);
+    wireStockSaveButtons(memberEl);
+  }
+
+  const pwInput = document.getElementById("pw-input");
+  document.getElementById("pw-toggle").addEventListener("click", ()=>{
+    const showing = pwInput.type === "text";
+    pwInput.type = showing ? "password" : "text";
+    document.getElementById("pw-toggle").textContent = showing ? "Show" : "Hide";
+  });
+  function tryEnter(){
+    const pwError = document.getElementById("pw-error");
+    if (pwInput.value === OWNER_PASSWORD) {
+      pwError.style.display = "none";
+      pwInput.value = "";
+      openDashboard("owner");
+    } else {
+      pwError.style.display = "block";
+    }
+  }
+  document.getElementById("pw-enter-btn").addEventListener("click", tryEnter);
+  pwInput.addEventListener("keydown", (e)=>{ if (e.key === "Enter") tryEnter(); });
+
+  const acctPwInput = document.getElementById("acct-pw-input");
+  document.getElementById("acct-pw-toggle").addEventListener("click", ()=>{
+    const showing = acctPwInput.type === "text";
+    acctPwInput.type = showing ? "password" : "text";
+    document.getElementById("acct-pw-toggle").textContent = showing ? "Show" : "Hide";
+  });
+  function tryAcctEnter(){
+    const acctError = document.getElementById("acct-pw-error");
+    if (acctPwInput.value === ACCOUNTING_PASSWORD) {
+      acctError.style.display = "none";
+      acctPwInput.value = "";
+      openDashboard("accounting");
+    } else {
+      acctError.style.display = "block";
+    }
+  }
+  document.getElementById("acct-pw-enter-btn").addEventListener("click", tryAcctEnter);
+  acctPwInput.addEventListener("keydown", (e)=>{ if (e.key === "Enter") tryAcctEnter(); });
+
+  function renderSalesSummary(orders){
+    const el = document.getElementById("sales-summary");
+    if (!el) return;
+    const totalRevenue = orders.reduce((s,o)=> s + (o.total||0), 0);
+    const totalOrders = orders.length;
+    const startOfToday = new Date();
+    startOfToday.setHours(0,0,0,0);
+    const todaysOrders = orders.filter(o=>{
+      const t = o.time && o.time.toDate ? o.time.toDate() : null;
+      return t && t >= startOfToday;
+    });
+    const todaysRevenue = todaysOrders.reduce((s,o)=> s + (o.total||0), 0);
+    lastAllTimeRevenue = totalRevenue;
+    lastTodayRevenue = todaysRevenue;
+    renderProfitStats();
+
+    el.innerHTML = `
+      <div class="stat-block"><div class="stat-num">${money(totalRevenue)}</div><div class="stat-label">All-time sales</div></div>
+      <div class="stat-block"><div class="stat-num">${totalOrders}</div><div class="stat-label">Total orders</div></div>
+      <div class="stat-block"><div class="stat-num">${money(todaysRevenue)}</div><div class="stat-label">Today's sales</div></div>
+      <div class="stat-block"><div class="stat-num">${todaysOrders.length}</div><div class="stat-label">Orders today</div></div>
+    `;
+  }
+
+  function renderProfitStats(){
+    const el = document.getElementById("profit-summary");
+    if (!el) return;
+    const allTimeProfit = lastAllTimeRevenue - lastAllTimeExpenses;
+    const todayProfit = lastTodayRevenue - lastTodayExpenses;
+    const profitColor = (v)=> v >= 0 ? "var(--healthy)" : "var(--sweet)";
+    el.innerHTML = `
+      <div class="stat-block"><div class="stat-num" style="color:var(--sweet);">${money(lastAllTimeExpenses)}</div><div class="stat-label">All-time expenses</div></div>
+      <div class="stat-block"><div class="stat-num" style="color:${profitColor(allTimeProfit)};">${money(allTimeProfit)}</div><div class="stat-label">Net profit (all-time)</div></div>
+      <div class="stat-block"><div class="stat-num" style="color:var(--sweet);">${money(lastTodayExpenses)}</div><div class="stat-label">Today's expenses</div></div>
+      <div class="stat-block"><div class="stat-num" style="color:${profitColor(todayProfit)};">${money(todayProfit)}</div><div class="stat-label">Net profit (today)</div></div>
+    `;
+  }
+
+  function renderBestSellers(orders){
+    const el = document.getElementById("best-sellers-list");
+    if (!el) return;
+    const tally = {}; // name -> { qty, revenue }
+    orders.forEach(o=>{
+      (o.items||[]).forEach(it=>{
+        if (!tally[it.name]) tally[it.name] = { qty: 0, revenue: 0 };
+        tally[it.name].qty += it.qty;
+        tally[it.name].revenue += it.qty * it.price;
+      });
+    });
+    const ranked = Object.entries(tally).sort((a,b)=> b[1].revenue - a[1].revenue).slice(0, 10);
+    if (ranked.length === 0) {
+      el.innerHTML = `<p style="color:var(--muted2)">No sales yet — this fills in once orders come through.</p>`;
+      return;
+    }
+    el.innerHTML = ranked.map(([name, stats], i)=>`
+      <div class="order-row">
+        <div>
+          <div style="font-weight:700;">${i+1}. ${name}</div>
+          <div style="font-size:13px; color:var(--muted2);">${stats.qty} sold</div>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; color:var(--gold); font-weight:700;">${money(stats.revenue)}</div>
+      </div>
+    `).join("");
+  }
+
+  let lastRealOrdersForProfit = [];
+
+  function renderProfitTracker(orders){
+    const summaryEl = document.getElementById("profit-tracker-summary");
+    const listEl = document.getElementById("profit-tracker-list");
+    if (!summaryEl || !listEl) return;
+
+    const startOfToday = new Date();
+    startOfToday.setHours(0,0,0,0);
+
+    const findUnitCost = (code)=>{
+      const it = INVENTORY.find(x=>x.code===code) || MEMBER_INVENTORY.find(x=>x.code===code);
+      return it && typeof it.unitCost === "number" ? it.unitCost : 0;
+    };
+
+    let allTimeProfit = 0;
+    let todayProfit = 0;
+    const itemProfit = {}; // code -> { name, qty, profit }
+
+    orders.forEach(o=>{
+      const discountMult = 1 - ((o.discountPct||0)/100);
+      const t = o.time && o.time.toDate ? o.time.toDate() : null;
+      const isToday = t && t >= startOfToday;
+      (o.items||[]).forEach(it=>{
+        const unitCost = findUnitCost(it.code);
+        const effectivePrice = it.price * discountMult;
+        const lineProfit = it.qty * (effectivePrice - unitCost);
+        allTimeProfit += lineProfit;
+        if (isToday) todayProfit += lineProfit;
+        if (!itemProfit[it.code]) itemProfit[it.code] = { name: it.name, qty: 0, profit: 0 };
+        itemProfit[it.code].qty += it.qty;
+        itemProfit[it.code].profit += lineProfit;
+      });
+    });
+
+    const profitColor = (v)=> v >= 0 ? "var(--healthy)" : "var(--sweet)";
+    summaryEl.innerHTML = `
+      <div class="stat-block"><div class="stat-num" style="color:${profitColor(allTimeProfit)};">${money(allTimeProfit)}</div><div class="stat-label">All-time profit</div></div>
+      <div class="stat-block"><div class="stat-num" style="color:${profitColor(todayProfit)};">${money(todayProfit)}</div><div class="stat-label">Today's profit</div></div>
+    `;
+
+    const ranked = Object.values(itemProfit).sort((a,b)=> b.profit - a.profit);
+    if (ranked.length === 0) {
+      listEl.innerHTML = `<p style="color:var(--muted2)">No sales yet — this fills in once orders come through.</p>`;
+      return;
+    }
+    listEl.innerHTML = ranked.map(stats=>`
+      <div class="order-row">
+        <div>
+          <div style="font-weight:700;">${stats.name}</div>
+          <div style="font-size:13px; color:var(--muted2);">${stats.qty} sold</div>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-weight:700; color:${profitColor(stats.profit)};">${money(stats.profit)}</div>
+      </div>
+    `).join("");
+  }
+
+  // ---- Profit goals ----
+  const profitGoalRef = db.collection("settings").doc("profitGoal");
+  let currentGoal = null;
+
+  function computeProfitSince(orders, startDate){
+    const findUnitCost = (code)=>{
+      const it = INVENTORY.find(x=>x.code===code) || MEMBER_INVENTORY.find(x=>x.code===code);
+      return it && typeof it.unitCost === "number" ? it.unitCost : 0;
+    };
+    let total = 0;
+    orders.forEach(o=>{
+      const t = o.time && o.time.toDate ? o.time.toDate() : null;
+      if (!t || t < startDate) return;
+      const discountMult = 1 - ((o.discountPct||0)/100);
+      (o.items||[]).forEach(it=>{
+        const unitCost = findUnitCost(it.code);
+        const effectivePrice = it.price * discountMult;
+        total += it.qty * (effectivePrice - unitCost);
+      });
+    });
+    return total;
+  }
+
+  function renderGoalProgress(){
+    const el = document.getElementById("goal-progress");
+    if (!el) return;
+    if (!currentGoal) {
+      el.innerHTML = `<p style="color:var(--muted2)">No goal set yet.</p>`;
+      return;
+    }
+    const startDate = currentGoal.startDate && currentGoal.startDate.toDate ? currentGoal.startDate.toDate() : new Date();
+    const deadline = currentGoal.deadline ? new Date(currentGoal.deadline + "T23:59:59") : null;
+    const earned = computeProfitSince(lastRealOrdersForProfit, startDate);
+    const target = currentGoal.amount || 0;
+    const pct = target > 0 ? Math.min(100, Math.max(0, (earned / target) * 100)) : 0;
+    const remaining = Math.max(0, target - earned);
+
+    let daysLeft = null;
+    let paceLine = "";
+    if (deadline) {
+      const msLeft = deadline.getTime() - Date.now();
+      daysLeft = Math.ceil(msLeft / (1000*60*60*24));
+      if (daysLeft > 0 && remaining > 0) {
+        paceLine = `Need ${money(remaining / daysLeft)}/day to hit it`;
+      } else if (remaining <= 0) {
+        paceLine = "🎉 Goal reached!";
+      } else {
+        paceLine = "Deadline has passed";
+      }
+    }
+
+    el.innerHTML = `
+      <div style="font-weight:700; margin-bottom:2px;">${(currentGoal.label||"Goal").replace(/</g,"&lt;")}</div>
+      <div style="font-size:13px; color:var(--muted2);">${money(earned)} of ${money(target)} earned${daysLeft !== null ? ` · ${daysLeft > 0 ? daysLeft + " days left" : "past deadline"}` : ""}</div>
+      <div class="goal-track"><div class="goal-fill ${pct < 50 ? "behind" : ""}" style="width:${pct}%;"></div></div>
+      <div style="font-size:13px; font-weight:600; color:${remaining <= 0 ? "var(--healthy)" : "var(--muted2)"};">${remaining <= 0 ? "🎉 Goal reached!" : `${money(remaining)} to go`}${paceLine && remaining > 0 ? " · " + paceLine : ""}</div>
+    `;
+  }
+
+  async function loadProfitGoal(){
+    try {
+      const doc = await profitGoalRef.get();
+      currentGoal = doc.exists ? doc.data() : null;
+    } catch (e) {
+      console.error(e);
+      currentGoal = null;
+    }
+    if (currentGoal) {
+      document.getElementById("goal-label").value = currentGoal.label || "";
+      document.getElementById("goal-amount").value = currentGoal.amount || "";
+      document.getElementById("goal-deadline").value = currentGoal.deadline || "";
+    }
+    renderGoalProgress();
+  }
+
+  document.getElementById("save-goal-btn").addEventListener("click", async ()=>{
+    const label = document.getElementById("goal-label").value.trim() || "Goal";
+    const amount = Math.max(0, parseFloat(document.getElementById("goal-amount").value) || 0);
+    const deadline = document.getElementById("goal-deadline").value || null;
+    if (!amount) { document.getElementById("goal-amount").focus(); return; }
+    const btn = document.getElementById("save-goal-btn");
+    btn.disabled = true;
+    btn.textContent = "Saving…";
+    try {
+      const goalData = {
+        label, amount, deadline,
+        startDate: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      await profitGoalRef.set(goalData);
+      currentGoal = { label, amount, deadline, startDate: { toDate: ()=> new Date() } };
+      renderGoalProgress();
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't save goal — try again.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Set goal";
+    }
+  });
+
+  document.getElementById("clear-goal-btn").addEventListener("click", async ()=>{
+    if (!confirm("Clear the current goal?")) return;
+    try {
+      await profitGoalRef.delete();
+    } catch (e) { console.error(e); }
+    currentGoal = null;
+    document.getElementById("goal-label").value = "";
+    document.getElementById("goal-amount").value = "";
+    document.getElementById("goal-deadline").value = "";
+    renderGoalProgress();
+  });
+
+  // ---- Discount codes ----
+  document.getElementById("add-discount-btn").addEventListener("click", async ()=>{
+    const codeEl = document.getElementById("new-discount-code");
+    const pctEl = document.getElementById("new-discount-pct");
+    const code = codeEl.value.trim().toUpperCase();
+    const pct = Math.min(90, Math.max(1, parseInt(pctEl.value, 10) || 0));
+    if (!code || !pct) {
+      if (!code) codeEl.focus(); else pctEl.focus();
+      return;
+    }
+    const btn = document.getElementById("add-discount-btn");
+    btn.disabled = true;
+    btn.textContent = "Creating…";
+    try {
+      await discountCodesRef.doc(code).set({ code, pct, usageCount: 0, active: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+      codeEl.value = "";
+      pctEl.value = "";
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't create code — try again.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "+ Create code";
+    }
+  });
+
+  let unsubscribeDiscountCodes = null;
+  function renderDiscountCodes(){
+    const list = document.getElementById("discount-codes-list");
+    if (!list) return;
+    unsubscribeDiscountCodes = discountCodesRef.orderBy("createdAt","desc").onSnapshot(snapshot=>{
+      if (snapshot.empty) {
+        list.innerHTML = `<p style="color:var(--muted2)">No discount codes yet.</p>`;
+        return;
+      }
+      list.innerHTML = snapshot.docs.map(doc=>{
+        const d = doc.data();
+        return `
+          <div class="order-row">
+            <div>
+              <div style="font-weight:700; font-family:'IBM Plex Mono',monospace;">${d.code} · ${d.pct}% off ${d.active ? '' : '<span style="color:var(--sweet);">(revoked)</span>'}</div>
+              <div style="font-size:13px; color:var(--muted2);">Used ${d.usageCount||0} time${(d.usageCount||0)===1?"":"s"}</div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="ghost-btn" data-toggledisc="${doc.id}" data-newactive="${!d.active}">${d.active ? "Revoke" : "Reactivate"}</button>
+              <button class="ghost-btn" data-deldisc="${doc.id}">Delete</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+      list.querySelectorAll("button[data-toggledisc]").forEach(btn=>{
+        btn.addEventListener("click", async ()=>{
+          btn.disabled = true;
+          try {
+            await discountCodesRef.doc(btn.dataset.toggledisc).update({ active: btn.dataset.newactive === "true" });
+          } catch (e) { console.error(e); btn.disabled = false; }
+        });
+      });
+      list.querySelectorAll("button[data-deldisc]").forEach(btn=>{
+        btn.addEventListener("click", async ()=>{
+          if (!confirm("Delete this discount code?")) return;
+          btn.disabled = true;
+          try {
+            await discountCodesRef.doc(btn.dataset.deldisc).delete();
+          } catch (e) { console.error(e); btn.disabled = false; }
+        });
+      });
+    }, err=> console.error(err));
+  }
+
+  // ---- Flyer generator ----
+  document.getElementById("generate-flyer-btn").addEventListener("click", ()=>{
+    const TAG_LABEL = { sweet:"Sweet", salty:"Salty", drink:"Drinks", "healthy-ish":"Healthier" };
+    const TAG_EMOJI = { sweet:"🍬", salty:"🧂", drink:"🥤", "healthy-ish":"🌿" };
+    const cards = INVENTORY.map(it=>{
+      const tagColor = TAG_COLOR[it.tag] || "#999";
+      return `
+        <div class="item-card" style="border-left:6px solid ${tagColor};">
+          <div class="item-top">
+            <span class="item-tag" style="background:${tagColor}22; color:${tagColor};">${TAG_EMOJI[it.tag]||""} ${TAG_LABEL[it.tag]||""}</span>
+            <span class="item-code">${it.code}</span>
+          </div>
+          <div class="item-name">${it.name}</div>
+          <div class="item-price">${money(it.price)}</div>
+        </div>
+      `;
+    }).join("");
+
+    const html = `
+      <!DOCTYPE html><html><head><meta charset="UTF-8"><title>Benji Snacks Flyer</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Work+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@700&display=swap" rel="stylesheet">
+      <style>
+        *{box-sizing:border-box;}
+        body{
+          font-family:'Work Sans',sans-serif; max-width:680px; margin:0 auto; color:#2B2A28;
+          background:linear-gradient(160deg,#FFF7E6 0%,#FFEFD6 100%);
+          padding:36px 28px 48px;
+        }
+        .header{
+          text-align:center; background:linear-gradient(90deg,#FF6B7A,#FFC24B,#4ECDC4,#8BD17C);
+          border-radius:18px; padding:4px; margin-bottom:0;
+        }
+        .header-inner{
+          background:#1F2226; border-radius:14px; padding:28px 20px; text-align:center;
+        }
+        h1{
+          font-family:'Archivo Black',sans-serif; color:#FFC24B; font-size:38px; letter-spacing:2px; margin:0 0 6px;
+          text-shadow:0 2px 0 rgba(0,0,0,0.2);
+        }
+        .sub{color:#EDEAE1; font-size:13px; letter-spacing:2px; text-transform:uppercase; opacity:0.85;}
+        .grid{
+          display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:28px 0;
+        }
+        .item-card{
+          background:#ffffff; border-radius:10px; padding:14px 16px;
+          box-shadow:0 3px 10px rgba(0,0,0,0.06);
+        }
+        .item-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;}
+        .item-tag{font-size:10px; font-weight:700; letter-spacing:0.06em; padding:3px 8px; border-radius:999px;}
+        .item-code{font-family:'IBM Plex Mono',monospace; font-size:11px; color:#999;}
+        .item-name{font-weight:700; font-size:15px; margin-bottom:4px; color:#2B2A28;}
+        .item-price{font-family:'IBM Plex Mono',monospace; font-size:18px; font-weight:700; color:#E8912F;}
+        .cta{
+          margin-top:8px; padding:18px 20px; background:linear-gradient(90deg,#FFC24B,#FFD97D);
+          border-radius:14px; font-weight:700; font-size:15px; text-align:center; color:#1F2226;
+          box-shadow:0 4px 14px rgba(255,194,75,0.4);
+        }
+        .fine{margin-top:18px; font-size:11px; color:#9a8f7a; text-align:center; letter-spacing:0.03em;}
+        .no-print{text-align:center; margin-top:26px;}
+        .no-print button{
+          padding:12px 22px; font-size:14px; font-weight:700; cursor:pointer; border:none;
+          border-radius:999px; background:#1F2226; color:#FFC24B;
+        }
+        @media print { .no-print{display:none;} body{background:white;} }
+        @media (max-width:480px){ .grid{grid-template-columns:1fr;} }
+      </style></head>
+      <body>
+        <div class="header">
+          <div class="header-inner">
+            <h1>BENJI SNACKS</h1>
+            <div class="sub">Row 4 · Locker Bay</div>
+          </div>
+        </div>
+        <div class="grid">${cards}</div>
+        <div class="cta">🛒 Order online — ask for the link! Venmo, Cash App, or cash accepted.</div>
+        <div class="fine">Prices subject to change based on stock.</div>
+        <div class="no-print"><button onclick="window.print()">Print / Save as PDF</button></div>
+      </body></html>
+    `;
+    const w = window.open("", "_blank");
+    w.document.write(html);
+    w.document.close();
+  });
+
+  // ---- Stored flyer files ----
+  const flyerFilesRef = db.collection("flyerFiles");
+  const teamChatRef = db.collection("teamChat");
+  let unsubscribeFlyerFiles = null;
+
+  document.getElementById("upload-flyer-btn").addEventListener("click", async ()=>{
+    const input = document.getElementById("flyer-file-input");
+    const statusEl = document.getElementById("flyer-upload-status");
+    const file = input.files[0];
+    if (!file) { input.focus(); return; }
+    if (file.size > 10 * 1024 * 1024) {
+      alert("That file is over 10MB — try a smaller image or PDF.");
+      return;
+    }
+    const btn = document.getElementById("upload-flyer-btn");
+    btn.disabled = true;
+    btn.textContent = "Uploading…";
+    statusEl.style.display = "block";
+    statusEl.textContent = "Uploading — this can take a moment for larger files…";
+    try {
+      const path = `flyers/${Date.now()}_${file.name}`;
+      const storageRef = storage.ref().child(path);
+      await storageRef.put(file);
+      const url = await storageRef.getDownloadURL();
+      await flyerFilesRef.add({
+        name: file.name,
+        path,
+        url,
+        type: file.type,
+        size: file.size,
+        uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      input.value = "";
+      statusEl.style.display = "none";
+    } catch (e) {
+      console.error(e);
+      statusEl.textContent = "Upload failed — check your connection and try again.";
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Upload";
+    }
+  });
+
+  function renderStoredFlyers(){
+    const list = document.getElementById("stored-flyers-list");
+    if (!list) return;
+    unsubscribeFlyerFiles = flyerFilesRef.orderBy("uploadedAt","desc").onSnapshot(snapshot=>{
+      if (snapshot.empty) {
+        list.innerHTML = `<p style="color:var(--muted2)">No flyers uploaded yet.</p>`;
+        return;
+      }
+      list.innerHTML = snapshot.docs.map(doc=>{
+        const f = doc.data();
+        const isImage = (f.type||"").startsWith("image/");
+        const time = f.uploadedAt && f.uploadedAt.toDate ? f.uploadedAt.toDate().toLocaleString() : "";
+        const sizeKb = f.size ? `${Math.round(f.size/1024)} KB` : "";
+        const thumb = isImage
+          ? `<img class="flyer-thumb" src="${f.url}" alt="${f.name}" />`
+          : `<div class="flyer-file-icon">PDF</div>`;
+        return `
+          <div class="order-row">
+            <div style="display:flex; align-items:center; gap:12px;">
+              ${thumb}
+              <div>
+                <div style="font-weight:700;">${f.name}</div>
+                <div style="font-size:13px; color:var(--muted2);">${sizeKb} · ${time}</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <a href="${f.url}" target="_blank" rel="noopener" class="ghost-btn" style="text-decoration:none; display:inline-block;">Open</a>
+              <button class="ghost-btn" data-delflyer="${doc.id}" data-delpath="${f.path}">Delete</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      list.querySelectorAll("button[data-delflyer]").forEach(btn=>{
+        btn.addEventListener("click", async ()=>{
+          if (!confirm("Delete this flyer file permanently?")) return;
+          btn.disabled = true;
+          try {
+            await storage.ref().child(btn.dataset.delpath).delete().catch(()=>{});
+            await flyerFilesRef.doc(btn.dataset.delflyer).delete();
+          } catch (e) {
+            console.error(e);
+            alert("Couldn't delete — try again.");
+            btn.disabled = false;
+          }
+        });
+      });
+    }, err=> console.error(err));
+  }
+
+  // ---- Team chat ----
+  let unsubscribeTeamChat = null;
+  const senderNameInput = document.getElementById("chat-sender-name");
+  senderNameInput.value = localStorage.getItem("snackVendChatName") || "";
+  senderNameInput.addEventListener("input", ()=>{
+    localStorage.setItem("snackVendChatName", senderNameInput.value.trim());
+  });
+
+  function scrollChatToBottom(){
+    const box = document.getElementById("chat-messages");
+    if (box) box.scrollTop = box.scrollHeight;
+  }
+
+  async function sendChatMessage(){
+    const nameEl = document.getElementById("chat-sender-name");
+    const msgEl = document.getElementById("chat-message-input");
+    const name = nameEl.value.trim();
+    const message = msgEl.value.trim();
+    if (!name) { nameEl.focus(); return; }
+    if (!message) { msgEl.focus(); return; }
+    const btn = document.getElementById("chat-send-btn");
+    btn.disabled = true;
+    try {
+      await teamChatRef.add({ name, message, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+      msgEl.value = "";
+      msgEl.focus();
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't send — try again.");
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  document.getElementById("chat-image-btn").addEventListener("click", ()=>{
+    const nameEl = document.getElementById("chat-sender-name");
+    if (!nameEl.value.trim()) { nameEl.focus(); return; }
+    document.getElementById("chat-image-input").click();
+  });
+
+  document.getElementById("chat-image-input").addEventListener("change", async (e)=>{
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) {
+      alert("That image is over 8MB — try a smaller one.");
+      e.target.value = "";
+      return;
+    }
+    const nameEl = document.getElementById("chat-sender-name");
+    const name = nameEl.value.trim();
+    if (!name) { nameEl.focus(); return; }
+    const statusEl = document.getElementById("chat-image-status");
+    const imgBtn = document.getElementById("chat-image-btn");
+    imgBtn.disabled = true;
+    statusEl.style.display = "block";
+    statusEl.textContent = "Uploading image…";
+    try {
+      const path = `chatImages/${Date.now()}_${file.name}`;
+      const storageRef = storage.ref().child(path);
+      await storageRef.put(file);
+      const url = await storageRef.getDownloadURL();
+      await teamChatRef.add({ name, message: "", imageUrl: url, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+      statusEl.style.display = "none";
+    } catch (err) {
+      console.error(err);
+      statusEl.textContent = "Couldn't upload image — try again.";
+    } finally {
+      imgBtn.disabled = false;
+      e.target.value = "";
+    }
+  });
+
+  document.getElementById("chat-send-btn").addEventListener("click", sendChatMessage);
+  document.getElementById("chat-message-input").addEventListener("keydown", (e)=>{
+    if (e.key === "Enter") sendChatMessage();
+  });
+
+  function linkifyMessage(text){
+    const escaped = (text||"").replace(/</g,"&lt;");
+    const urlPattern = /((https?:\/\/|www\.)[^\s<]+)/gi;
+    return escaped.replace(urlPattern, (match)=>{
+      const href = match.startsWith("http") ? match : `https://${match}`;
+      return `<a href="${href}" target="_blank" rel="noopener" style="color:var(--gold); text-decoration:underline; word-break:break-all;">${match}</a>`;
+    });
+  }
+
+  // ---- Browser notifications for chat (works while this tab is open) ----
+  function updateNotifBtn(){
+    const btn = document.getElementById("chat-notif-btn");
+    if (!btn) return;
+    if (!("Notification" in window)) {
+      btn.textContent = "🔕 Not supported in this browser";
+      btn.disabled = true;
+    } else if (Notification.permission === "granted") {
+      btn.textContent = "🔔 Notifications on";
+    } else if (Notification.permission === "denied") {
+      btn.textContent = "🔕 Blocked — enable in browser settings";
+    } else {
+      btn.textContent = "🔔 Enable notifications";
+    }
+  }
+
+  document.getElementById("chat-notif-btn").addEventListener("click", async ()=>{
+    if (!("Notification" in window)) return;
+    if (Notification.permission === "default") {
+      await Notification.requestPermission();
+    }
+    updateNotifBtn();
+  });
+  updateNotifBtn();
+
+  let chatIsFirstLoad = true;
+
+  function renderTeamChat(){
+    const box = document.getElementById("chat-messages");
+    if (!box || unsubscribeTeamChat) return; // already listening
+    chatIsFirstLoad = true;
+    unsubscribeTeamChat = teamChatRef.orderBy("createdAt","asc").limitToLast(100).onSnapshot(snapshot=>{
+      const myName = (document.getElementById("chat-sender-name").value || "").trim().toLowerCase();
+
+      if (!chatIsFirstLoad && "Notification" in window && Notification.permission === "granted") {
+        snapshot.docChanges().forEach(change=>{
+          if (change.type === "added") {
+            const m = change.doc.data();
+            const fromMe = myName && (m.name||"").trim().toLowerCase() === myName;
+            if (!fromMe) {
+              try {
+                new Notification(`${m.name || "Team"}`, {
+                  body: m.imageUrl ? "📷 Sent a photo" : (m.message || ""),
+                  icon: "",
+                  tag: change.doc.id
+                });
+              } catch (e) { console.error("notification error", e); }
+            }
+          }
+        });
+      }
+      chatIsFirstLoad = false;
+
+      if (snapshot.empty) {
+        box.innerHTML = `<p style="color:var(--muted2)">No messages yet — say hi.</p>`;
+        return;
+      }
+      box.innerHTML = snapshot.docs.map(doc=>{
+        const m = doc.data();
+        const isMine = myName && (m.name||"").trim().toLowerCase() === myName;
+        const time = m.createdAt && m.createdAt.toDate ? m.createdAt.toDate().toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}) : "";
+        const imageHtml = m.imageUrl ? `<img class="chat-image" src="${m.imageUrl}" alt="Shared image" onclick="window.open('${m.imageUrl}','_blank')" />` : "";
+        const textHtml = m.message ? `<div class="chat-text">${linkifyMessage(m.message)}</div>` : "";
+        return `
+          <div class="chat-bubble ${isMine ? 'chat-bubble-mine' : ''}">
+            <div class="chat-sender">${m.name || "Unknown"}</div>
+            ${textHtml}
+            ${imageHtml}
+            <div class="chat-time">${time}</div>
+          </div>
+        `;
+      }).join("");
+      scrollChatToBottom();
+    }, err=> console.error(err));
+  }
+
+  // ---- Group voice/video calling (WebRTC mesh, signaled through Firestore, free STUN) ----
+  const callsRef = db.collection("calls");
+  const mySessionId = Math.random().toString(36).slice(2) + Date.now();
+  const rtcConfig = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
+
+  let localStream = null;
+  let currentRoomId = null;
+  let roomHasVideo = false;
+  let peerConnections = {};      // peerId -> RTCPeerConnection
+  let videoTransceivers = {};    // peerId -> RTCRtpTransceiver (reserved video slot per peer)
+  let unsubscribeParticipants = null;
+  let unsubscribeMySignals = null;
+  let unsubscribeRoomDoc = null;
+  let unsubscribeIncomingCalls = null;
+  let muted = false;
+  let cameraOff = false;
+  let cameraVideoTrack = null;
+  let screenStream = null;
+  let isScreenSharing = false;
+  let dismissedRoomIds = new Set();
+
+  function getCallerDisplayName(){
+    return (document.getElementById("chat-sender-name").value || "").trim() || "Someone";
+  }
+
+  // ---- Synthesized ringtone (no audio files needed) ----
+  let ringAudioCtx = null;
+  let ringInterval = null;
+
+  function playRingTone(){
+    stopRingTone();
+    try {
+      ringAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch (e) { return; }
+    function ringOnce(){
+      const ctx = ringAudioCtx;
+      if (!ctx) return;
+      if (ctx.state === "suspended") ctx.resume().catch(()=>{});
+      const now = ctx.currentTime;
+      [440, 480].forEach(freq=>{
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.linearRampToValueAtTime(0.12, now + 0.05);
+        gain.gain.setValueAtTime(0.12, now + 1.9);
+        gain.gain.linearRampToValueAtTime(0.0001, now + 2.0);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 2.0);
+      });
+    }
+    ringOnce();
+    ringInterval = setInterval(ringOnce, 4000);
+  }
+
+  function stopRingTone(){
+    if (ringInterval) { clearInterval(ringInterval); ringInterval = null; }
+    if (ringAudioCtx) { try { ringAudioCtx.close(); } catch(e){} ringAudioCtx = null; }
+  }
+
+  function showCallIdle(){
+    document.getElementById("call-incoming-overlay").classList.add("hidden");
+    document.getElementById("call-active-overlay").classList.add("hidden");
+  }
+  function showCallIncoming(name){
+    document.getElementById("call-incoming-overlay").classList.remove("hidden");
+    document.getElementById("incoming-caller-name").textContent = name || "Someone";
+    playRingTone();
+  }
+  function showCallActive(statusText){
+    stopRingTone();
+    document.getElementById("call-incoming-overlay").classList.add("hidden");
+    document.getElementById("call-active-overlay").classList.remove("hidden");
+    document.getElementById("call-status-text").textContent = statusText;
+    document.getElementById("camera-call-btn").classList.toggle("hidden", !roomHasVideo);
+  }
+
+  function tileId(peerId){ return `call-tile-${peerId}`; }
+
+  function ensureTile(peerId, label, hasVideo){
+    let tile = document.getElementById(tileId(peerId));
+    if (tile) return tile;
+    tile = document.createElement("div");
+    tile.id = tileId(peerId);
+    tile.className = "call-tile" + (hasVideo ? "" : " call-tile-audio-only");
+    const isLocal = peerId === "local";
+    if (hasVideo) {
+      tile.innerHTML = `<video autoplay playsinline ${isLocal ? "muted" : ""}></video><div class="call-tile-label">${label}</div>`;
+    } else {
+      // No video element here, so remote audio needs its own <audio> tag to actually play.
+      // Local tile never plays back its own audio (would echo), so it gets none.
+      tile.innerHTML = `<div class="call-tile-label">🎤 ${label}</div>${isLocal ? "" : `<audio autoplay></audio>`}`;
+    }
+    document.getElementById("call-tiles").appendChild(tile);
+    return tile;
+  }
+
+  function removeTile(peerId){
+    const tile = document.getElementById(tileId(peerId));
+    if (tile) tile.remove();
+  }
+
+  function setTileStream(peerId, label, stream, hasVideo){
+    let tile = document.getElementById(tileId(peerId));
+    if (!tile) tile = ensureTile(peerId, label, hasVideo);
+    const wantsVideoTile = hasVideo && stream && stream.getVideoTracks().length > 0;
+    const isCurrentlyVideoTile = !tile.classList.contains("call-tile-audio-only");
+    if (wantsVideoTile !== isCurrentlyVideoTile) {
+      tile.remove();
+      tile = ensureTile(peerId, label, wantsVideoTile);
+    }
+    const videoEl = tile.querySelector("video");
+    const audioEl = tile.querySelector("audio");
+    if (videoEl && stream) videoEl.srcObject = stream;
+    if (audioEl && stream) audioEl.srcObject = stream;
+  }
+
+  function localAudioAndCameraStream(){
+    return localStream;
+  }
+
+  async function createPeerConnectionFor(peerId, peerName){
+    const pc = new RTCPeerConnection(rtcConfig);
+    peerConnections[peerId] = pc;
+
+    const audioTrack = localStream && localStream.getAudioTracks()[0];
+    if (audioTrack) pc.addTrack(audioTrack, localStream);
+
+    const videoTransceiver = pc.addTransceiver("video", { direction: "sendrecv" });
+    videoTransceivers[peerId] = videoTransceiver;
+    if (roomHasVideo && cameraVideoTrack) {
+      videoTransceiver.sender.replaceTrack(cameraVideoTrack);
+    }
+    if (isScreenSharing && screenStream) {
+      videoTransceiver.sender.replaceTrack(screenStream.getVideoTracks()[0]);
+    }
+
+    const remoteStream = new MediaStream();
+    pc.ontrack = (e)=>{
+      remoteStream.addTrack(e.track);
+      setTileStream(peerId, peerName, remoteStream, remoteStream.getVideoTracks().some(t=>!t.muted));
+      if (e.track.kind === "video") {
+        e.track.onunmute = ()=> setTileStream(peerId, peerName, remoteStream, true);
+        e.track.onmute = ()=> setTileStream(peerId, peerName, remoteStream, false);
+      }
+    };
+
+    return pc;
+  }
+
+  function signalDocId(fromId, toId){ return `${fromId}__${toId}`; }
+
+  async function offerToPeer(roomRef, peerId, peerName){
+    const pc = await createPeerConnectionFor(peerId, peerName);
+    const signalRef = roomRef.collection("signals").doc(signalDocId(mySessionId, peerId));
+
+    pc.onicecandidate = (e)=>{
+      if (e.candidate) signalRef.collection("fromCandidates").add(e.candidate.toJSON()).catch(()=>{});
+    };
+
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+    await signalRef.set({
+      from: mySessionId, to: peerId, fromName: getCallerDisplayName(),
+      offer: { type: offer.type, sdp: offer.sdp },
+      answer: null,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    signalRef.onSnapshot(async (doc)=>{
+      const data = doc.data();
+      if (!data) return;
+      if (data.answer && pc.signalingState !== "stable" && !pc.currentRemoteDescription) {
+        await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
+      }
+    });
+
+    signalRef.collection("toCandidates").onSnapshot((snap)=>{
+      snap.docChanges().forEach((change)=>{
+        if (change.type === "added") {
+          pc.addIceCandidate(new RTCIceCandidate(change.doc.data())).catch(()=>{});
+        }
+      });
+    });
+  }
+
+  async function answerFromPeer(roomRef, signalDoc){
+    const data = signalDoc.data();
+    const peerId = data.from;
+    const peerName = data.fromName || "Teammate";
+    const pc = await createPeerConnectionFor(peerId, peerName);
+    const signalRef = signalDoc.ref;
+
+    pc.onicecandidate = (e)=>{
+      if (e.candidate) signalRef.collection("toCandidates").add(e.candidate.toJSON()).catch(()=>{});
+    };
+
+    await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
+    const answer = await pc.createAnswer();
+    await pc.setLocalDescription(answer);
+    await signalRef.update({ answer: { type: answer.type, sdp: answer.sdp } });
+
+    signalRef.collection("fromCandidates").onSnapshot((snap)=>{
+      snap.docChanges().forEach((change)=>{
+        if (change.type === "added") {
+          pc.addIceCandidate(new RTCIceCandidate(change.doc.data())).catch(()=>{});
+        }
+      });
+    });
+  }
+
+  function closePeer(peerId){
+    if (peerConnections[peerId]) {
+      try { peerConnections[peerId].close(); } catch(e){}
+      delete peerConnections[peerId];
+    }
+    delete videoTransceivers[peerId];
+    removeTile(peerId);
+  }
+
+  function updateCallStatusText(){
+    const count = Object.keys(peerConnections).length;
+    if (count === 0) showCallActive("Waiting for others to join…");
+    else showCallActive(`In call · ${count + 1} people`);
+  }
+
+  async function joinRoom(roomId, withVideo){
+    if (currentRoomId) return;
+    const name = getCallerDisplayName();
+    if (!name || name === "Someone") { document.getElementById("chat-sender-name").focus(); return; }
+
+    roomHasVideo = !!withVideo;
+    try {
+      localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: withVideo ? { width: 320, height: 240 } : false });
+    } catch (e) {
+      alert(withVideo ? "Couldn't access your camera/mic — check browser permissions and try again." : "Couldn't access your microphone — check browser permissions and try again.");
+      return;
+    }
+    cameraVideoTrack = withVideo ? (localStream.getVideoTracks()[0] || null) : null;
+
+    currentRoomId = roomId;
+    const roomRef = callsRef.doc(roomId);
+
+    ensureTile("local", `${name} (you)`, !!cameraVideoTrack);
+    if (cameraVideoTrack) setTileStream("local", `${name} (you)`, localStream, true);
+
+    showCallActive("Joining…");
+
+    // Offer to everyone already in the room
+    const existing = await roomRef.collection("participants").get();
+    for (const doc of existing.docs) {
+      if (doc.id === mySessionId) continue;
+      await offerToPeer(roomRef, doc.id, doc.data().name || "Teammate");
+    }
+
+    // Listen for people who join after us — they'll offer to us
+    unsubscribeMySignals = roomRef.collection("signals").where("to","==",mySessionId).onSnapshot((snap)=>{
+      snap.docChanges().forEach((change)=>{
+        if (change.type === "added") {
+          answerFromPeer(roomRef, change.doc);
+        }
+      });
+    });
+
+    // Track participant list to know when people leave
+    unsubscribeParticipants = roomRef.collection("participants").onSnapshot((snap)=>{
+      snap.docChanges().forEach((change)=>{
+        if (change.type === "removed" && change.doc.id !== mySessionId) {
+          closePeer(change.doc.id);
+        }
+      });
+      updateCallStatusText();
+    });
+
+    // Detect room ended entirely
+    unsubscribeRoomDoc = roomRef.onSnapshot((doc)=>{
+      const data = doc.data();
+      if (!data || data.status === "ended") {
+        leaveCall();
+      }
+    });
+
+    // Register ourselves so future joiners can find and offer to us
+    await roomRef.collection("participants").doc(mySessionId).set({
+      name, isVideo: !!withVideo, joinedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    updateCallStatusText();
+  }
+
+  async function startCall(withVideo){
+    if (currentRoomId) return;
+    const name = getCallerDisplayName();
+    if (!name || name === "Someone") { document.getElementById("chat-sender-name").focus(); return; }
+    const startBtn = document.getElementById("start-call-btn");
+    const startVideoBtn = document.getElementById("start-video-call-btn");
+    startBtn.disabled = true;
+    startVideoBtn.disabled = true;
+    try {
+      const roomRef = callsRef.doc();
+      await roomRef.set({
+        hostName: name, hostSession: mySessionId, isVideo: !!withVideo,
+        status: "active", createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      await joinRoom(roomRef.id, withVideo);
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't start the call — try again.");
+    } finally {
+      startBtn.disabled = false;
+      startVideoBtn.disabled = false;
+    }
+  }
+
+  document.getElementById("start-call-btn").addEventListener("click", ()=> startCall(false));
+  document.getElementById("start-video-call-btn").addEventListener("click", ()=> startCall(true));
+
+  document.getElementById("accept-call-btn").addEventListener("click", ()=>{
+    const overlay = document.getElementById("call-incoming-overlay");
+    const roomId = overlay.dataset.roomid;
+    const withVideo = overlay.dataset.isvideo === "true";
+    stopRingTone();
+    overlay.classList.add("hidden");
+    if (roomId) joinRoom(roomId, withVideo);
+  });
+
+  document.getElementById("decline-call-btn").addEventListener("click", ()=>{
+    const overlay = document.getElementById("call-incoming-overlay");
+    if (overlay.dataset.roomid) dismissedRoomIds.add(overlay.dataset.roomid);
+    stopRingTone();
+    showCallIdle();
+  });
+
+  async function leaveCall(){
+    stopRingTone();
+    Object.keys(peerConnections).forEach(closePeer);
+    peerConnections = {};
+    videoTransceivers = {};
+    if (localStream) { localStream.getTracks().forEach(t=>t.stop()); localStream = null; }
+    if (screenStream) { screenStream.getTracks().forEach(t=>t.stop()); screenStream = null; }
+    if (unsubscribeParticipants) { unsubscribeParticipants(); unsubscribeParticipants = null; }
+    if (unsubscribeMySignals) { unsubscribeMySignals(); unsubscribeMySignals = null; }
+    if (unsubscribeRoomDoc) { unsubscribeRoomDoc(); unsubscribeRoomDoc = null; }
+
+    if (currentRoomId) {
+      const roomRef = callsRef.doc(currentRoomId);
+      roomRef.collection("participants").doc(mySessionId).delete().catch(()=>{});
+      roomRef.collection("participants").get().then(snap=>{
+        if (snap.size <= 1) roomRef.update({ status: "ended" }).catch(()=>{});
+      }).catch(()=>{});
+    }
+
+    document.getElementById("call-tiles").innerHTML = "";
+    currentRoomId = null;
+    roomHasVideo = false;
+    cameraVideoTrack = null;
+    muted = false;
+    cameraOff = false;
+    isScreenSharing = false;
+    document.getElementById("mute-call-btn").textContent = "🎤 Mute";
+    document.getElementById("camera-call-btn").textContent = "📷 Camera off";
+    document.getElementById("screenshare-call-btn").textContent = "🖥️ Share screen";
+    showCallIdle();
+  }
+
+  document.getElementById("end-call-btn").addEventListener("click", leaveCall);
+
+  document.getElementById("mute-call-btn").addEventListener("click", ()=>{
+    if (!localStream) return;
+    muted = !muted;
+    localStream.getAudioTracks().forEach(t=> t.enabled = !muted);
+    document.getElementById("mute-call-btn").textContent = muted ? "🎤 Unmute" : "🎤 Mute";
+  });
+
+  document.getElementById("camera-call-btn").addEventListener("click", ()=>{
+    if (!localStream) return;
+    cameraOff = !cameraOff;
+    localStream.getVideoTracks().forEach(t=> t.enabled = !cameraOff);
+    document.getElementById("camera-call-btn").textContent = cameraOff ? "📷 Camera on" : "📷 Camera off";
+  });
+
+  async function startScreenShare(){
+    let stream;
+    try {
+      stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: false });
+    } catch (e) {
+      return;
+    }
+    screenStream = stream;
+    const screenTrack = stream.getVideoTracks()[0];
+    Object.values(videoTransceivers).forEach(t=> t.sender.replaceTrack(screenTrack));
+    setTileStream("local", "You (screen)", stream, true);
+    isScreenSharing = true;
+    const btn = document.getElementById("screenshare-call-btn");
+    btn.textContent = "🖥️ Stop sharing";
+    screenTrack.onended = ()=> stopScreenShare();
+  }
+
+  async function stopScreenShare(){
+    if (!isScreenSharing) return;
+    isScreenSharing = false;
+    if (screenStream) { screenStream.getTracks().forEach(t=>t.stop()); screenStream = null; }
+    const btn = document.getElementById("screenshare-call-btn");
+    btn.textContent = "🖥️ Share screen";
+    const replacement = cameraVideoTrack || null;
+    Object.values(videoTransceivers).forEach(t=> t.sender.replaceTrack(replacement));
+    if (cameraVideoTrack) {
+      setTileStream("local", "You", localStream, true);
+    } else {
+      removeTile("local");
+      const name = getCallerDisplayName();
+      ensureTile("local", `${name} (you)`, false);
+    }
+  }
+
+  document.getElementById("screenshare-call-btn").addEventListener("click", ()=>{
+    if (isScreenSharing) stopScreenShare();
+    else startScreenShare();
+  });
+
+  function startIncomingCallListener(){
+    if (unsubscribeIncomingCalls) return; // already listening
+    unsubscribeIncomingCalls = callsRef.where("status","==","active").onSnapshot((snapshot)=>{
+      snapshot.docChanges().forEach((change)=>{
+        if (change.type !== "added") return;
+        const data = change.doc.data();
+        if (!data || data.hostSession === mySessionId) return; // our own room
+        if (currentRoomId) return; // already on a call
+        if (dismissedRoomIds.has(change.doc.id)) return;
+        document.getElementById("call-incoming-overlay").dataset.roomid = change.doc.id;
+        document.getElementById("call-incoming-overlay").dataset.isvideo = data.isVideo ? "true" : "false";
+        showCallIncoming(data.hostName);
+      });
+    }, err=> console.error("incoming call watch error", err));
+  }
+
+
+  function renderLowStockAlerts(){
+    const panel = document.getElementById("low-stock-panel");
+    const list = document.getElementById("low-stock-list");
+    if (!panel || !list) return;
+    const threshold = 3;
+    const low = [
+      ...INVENTORY.filter(it=> it.stock <= threshold).map(it=> ({ ...it, section: "Machine" })),
+      ...MEMBER_INVENTORY.filter(it=> it.stock <= threshold).map(it=> ({ ...it, section: "Member" })),
+    ];
+    if (low.length === 0) {
+      panel.style.display = "none";
+      return;
+    }
+    panel.style.display = "block";
+    list.innerHTML = low.map(it=>`
+      <div class="low-stock-row">
+        <span>${it.section} · ${it.code} · ${it.name}</span>
+        <span style="color:${it.stock === 0 ? 'var(--sweet)' : 'var(--gold)'}; font-weight:700;">${it.stock === 0 ? "OUT" : `${it.stock} left`}</span>
+      </div>
+    `).join("");
+  }
+
+  function switchDashTab(tabName){
+    ["operations","accounting","marketing","teamchat"].forEach(t=>{
+      document.getElementById(`tab-${t}`).style.display = (t === tabName) ? "block" : "none";
+    });
+    document.querySelectorAll(".dash-tab-btn").forEach(btn=>{
+      btn.classList.toggle("active", btn.dataset.tab === tabName);
+    });
+    if (tabName === "teamchat") {
+      renderTeamChat();
+      scrollChatToBottom();
+    }
+  }
+
+  document.querySelectorAll(".dash-tab-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=> switchDashTab(btn.dataset.tab));
+  });
+
+  function openDashboard(role){
+    show("dashboard-view");
+    const tabsWrap = document.getElementById("dash-tabs-wrap");
+    if (role === "accounting") {
+      tabsWrap.style.display = "none";
+      switchDashTab("accounting");
+    } else {
+      tabsWrap.style.display = "block";
+      switchDashTab("operations");
+      renderMembersList();
+      renderStockManager();
+      renderMembershipRequests();
+      renderClientsList();
+      renderBannersList();
+      renderDiscountCodes();
+      renderStoredFlyers();
+      startIncomingCallListener();
+    }
+    renderLowStockAlerts();
+    renderRetailPrices();
+    renderProfitTracker(lastRealOrdersForProfit);
+    loadProfitGoal();
+    loadSavedSplit();
+    renderExpenses();
+    const dashTitle = document.getElementById("dash-title");
+    const list = document.getElementById("orders-list");
+    dashTitle.textContent = "Loading…";
+    unsubscribeOrders = ordersRef.orderBy("time","desc").onSnapshot(snapshot=>{
+      const orders = [];
+      snapshot.forEach(doc=> orders.push({ docId: doc.id, ...doc.data() }));
+      lastOrdersForExport = orders;
+      const awaitingApproval = orders.filter(o=>o.status === "pending" || !o.status);
+      const approved = orders.filter(o=>o.status === "approved");
+      const pending = orders.filter(o=>o.status !== "fulfilled");
+      const fulfilled = orders.filter(o=>o.status === "fulfilled");
+      dashTitle.textContent = `${awaitingApproval.length} awaiting approval · ${approved.length} ready for pickup · ${fulfilled.length} fulfilled`;
+      const realOrders = orders.filter(o=> !o.isTest);
+      lastRealOrdersForProfit = realOrders;
+      renderSalesSummary(realOrders);
+      renderBestSellers(realOrders);
+      renderProfitTracker(realOrders);
+      renderGoalProgress();
+
+      if (orders.length === 0) {
+        list.innerHTML = `<p style="color:var(--muted2)">No orders yet — they'll show up here as classmates check out.</p>`;
+        return;
+      }
+
+      list.innerHTML = [...pending, ...fulfilled].map(o=>{
+        const time = o.time && o.time.toDate ? o.time.toDate().toLocaleString() : "";
+        const itemsLine = (o.items||[]).map(it=>`${it.qty}× ${it.name}`).join(", ");
+        const testTag = o.isTest ? `<span style="color:var(--sweet); font-weight:700;">TEST — excluded from totals</span>` : "";
+        let actionBtn;
+        if (o.status === "pending") {
+          actionBtn = `<button class="ghost-btn" data-approve="${o.docId}">Approve</button>`;
+        } else if (o.status === "approved") {
+          actionBtn = `<button class="ghost-btn" data-docid="${o.docId}">Mark picked up</button>`;
+        } else {
+          actionBtn = `<button class="ghost-btn" data-delorder="${o.docId}" style="color:var(--sweet);">Delete</button>`;
+        }
+        return `
+          <div class="order-row" style="${o.isTest ? 'opacity:0.55;' : ''}">
+            <div>
+              <div style="font-weight:700;">${o.id} · ${o.name}
+                <span class="order-status-${o.status === 'fulfilled' ? 'fulfilled' : 'pending'}">${o.status}</span>
+                ${testTag}
+              </div>
+              <div style="font-size:13px; color:var(--muted2);">${itemsLine}</div>
+              <div style="font-size:13px; color:var(--muted2);">${money(o.total)} via ${o.payment} · ${time}</div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="ghost-btn" data-testtoggle="${o.docId}" data-newtest="${!o.isTest}">${o.isTest ? "Unmark test" : "Mark as test"}</button>
+              ${actionBtn}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      list.querySelectorAll("button[data-testtoggle]").forEach(btn=>{
+        btn.addEventListener("click", async ()=>{
+          btn.disabled = true;
+          try {
+            await ordersRef.doc(btn.dataset.testtoggle).update({ isTest: btn.dataset.newtest === "true" });
+          } catch (e) {
+            console.error(e);
+            btn.disabled = false;
+          }
+        });
+      });
+
+      list.querySelectorAll("button[data-approve]").forEach(btn=>{
+        btn.addEventListener("click", async ()=>{
+          btn.disabled = true;
+          btn.textContent = "…";
+          try {
+            await ordersRef.doc(btn.dataset.approve).update({ status: "approved" });
+          } catch (e) {
+            console.error(e);
+            btn.disabled = false;
+            btn.textContent = "Approve";
+          }
+        });
+      });
+
+      list.querySelectorAll("button[data-docid]").forEach(btn=>{
+        btn.addEventListener("click", async ()=>{
+          btn.disabled = true;
+          btn.textContent = "…";
+          try {
+            await ordersRef.doc(btn.dataset.docid).update({ status: "fulfilled" });
+          } catch (e) {
+            console.error(e);
+            btn.disabled = false;
+            btn.textContent = "Mark picked up";
+          }
+        });
+      });
+
+      list.querySelectorAll("button[data-delorder]").forEach(btn=>{
+        btn.addEventListener("click", async ()=>{
+          if (!confirm("Delete this order permanently? This can't be undone.")) return;
+          btn.disabled = true;
+          btn.textContent = "…";
+          try {
+            await ordersRef.doc(btn.dataset.delorder).delete();
+          } catch (e) {
+            console.error(e);
+            btn.disabled = false;
+            btn.textContent = "Delete";
+          }
+        });
+      });
+    }, err=>{
+      console.error(err);
+      list.innerHTML = `<p style="color:var(--sweet)">Couldn't load orders — check your connection.</p>`;
+    });
+  }
+
+  function show(id){
+    [
+      "shop-view","checkout-view","done-view","login-view","dashboard-view",
+      "members-login-view","members-shop-view","members-checkout-view","members-done-view",
+      "buy-membership-view","membership-requested-view","accounting-login-view"
+    ].forEach(v=>{
+      document.getElementById(v).classList.toggle("hidden", v !== id);
+    });
+    document.getElementById("tray").style.display =
+      (id === "shop-view" || id === "members-shop-view") ? "flex" : "none";
+  }
+
+  renderGrid();
+  renderTray();
+  seedIfEmpty(inventoryRef, DEFAULT_INVENTORY)
+    .then(watchInventory)
+    .catch(err=> console.error("inventory seed error", err));
+  seedIfEmpty(memberInventoryRef, DEFAULT_MEMBER_INVENTORY)
+    .then(watchMemberInventory)
+    .catch(err=> console.error("member inventory seed error", err));
+  handleStripeReturn();
+
+  // ---- Banners (multiple, add/remove) ----
+  const bannersRef = db.collection("banners");
+
+  function renderShopBanners(banners){
+    const regularEl = document.getElementById("pickup-banner-regular");
+    const memberEl = document.getElementById("pickup-banner-member");
+    [regularEl, memberEl].forEach(el=>{
+      if (!el) return;
+      if (banners.length === 0) {
+        el.innerHTML = "";
+        el.classList.add("hidden");
+      } else {
+        el.innerHTML = banners.map(b=> `<div>📣 ${(b.text||"").replace(/</g,"&lt;")}</div>`).join("");
+        el.classList.remove("hidden");
+      }
+    });
+  }
+
+  bannersRef.orderBy("createdAt","asc").onSnapshot(snapshot=>{
+    const banners = snapshot.docs.map(doc=> ({ id: doc.id, ...doc.data() }));
+    currentBanners = banners;
+    renderShopBanners(banners);
+    renderGrid();
+    if (currentMember) renderMemberGrid();
+  }, err=> console.error("banners watch error", err));
+
+  document.getElementById("save-pickup-location-btn").addEventListener("click", async ()=>{
+    const input = document.getElementById("pickup-location-input");
+    const btn = document.getElementById("save-pickup-location-btn");
+    btn.disabled = true;
+    btn.textContent = "Saving…";
+    try {
+      await pickupLocationRef.set({ location: input.value.trim() });
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't save — try again.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Save";
+    }
+  });
+
+  document.getElementById("add-banner-btn").addEventListener("click", async ()=>{
+    const input = document.getElementById("new-banner-input");
+    const text = input.value.trim();
+    if (!text) { input.focus(); return; }
+    const btn = document.getElementById("add-banner-btn");
+    btn.disabled = true;
+    btn.textContent = "Adding…";
+    try {
+      await bannersRef.add({ text, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+      input.value = "";
+    } catch (e) {
+      console.error(e);
+      alert("Couldn't add banner — try again.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "+ Add banner";
+    }
+  });
+
+  let unsubscribeBanners = null;
+  function renderBannersList(){
+    const list = document.getElementById("banners-list");
+    if (!list) return;
+    unsubscribeBanners = bannersRef.orderBy("createdAt","asc").onSnapshot(snapshot=>{
+      if (snapshot.empty) {
+        list.innerHTML = `<p style="color:var(--muted2)">No banners active right now.</p>`;
+        return;
+      }
+      list.innerHTML = snapshot.docs.map(doc=>{
+        const b = doc.data();
+        return `
+          <div class="order-row">
+            <div style="font-weight:600;">📣 ${(b.text||"").replace(/</g,"&lt;")}</div>
+            <button class="ghost-btn" data-delbanner="${doc.id}">Remove</button>
+          </div>
+        `;
+      }).join("");
+      list.querySelectorAll("button[data-delbanner]").forEach(btn=>{
+        btn.addEventListener("click", async ()=>{
+          btn.disabled = true;
+          try {
+            await bannersRef.doc(btn.dataset.delbanner).delete();
+          } catch (e) {
+            console.error(e);
+            btn.disabled = false;
+          }
+        });
+      });
+    }, err=> console.error(err));
+  }
+
+</script>
+</script>
+</body>
+</html>
