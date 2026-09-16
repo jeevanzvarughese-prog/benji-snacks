@@ -591,6 +591,13 @@
       <p class="fineprint" style="margin-top:0;">Tell it the problem, get straight advice on how to handle it.</p>
       <button class="confirm-btn" id="prep-open-btn" style="width:100%;">🗣️ Open The Prep Room</button>
     </div>
+
+    <div class="panel panel-wide" style="margin-top:16px;">
+      <div class="eyebrow">💼 MOCK CFO INTERVIEW</div>
+      <h2 class="panel-title">Practice with the CFO</h2>
+      <p class="fineprint" style="margin-top:0;">A live AI plays the CFO and asks real, tough questions — a new one every time, no fixed script.</p>
+      <button class="confirm-btn" id="cfo-open-btn" style="width:100%;">💼 Start Mock Interview</button>
+    </div>
   </div>
 
   <div id="prep-overlay" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:65; display:flex; align-items:center; justify-content:center; padding:16px;">
@@ -609,6 +616,28 @@
 
       <div id="prep-loading" style="display:none; font-size:13px; color:var(--muted); font-style:italic; margin-top:14px;">Thinking it through…</div>
       <div id="prep-advice-text" style="display:none; font-size:13.5px; line-height:1.6; white-space:pre-wrap; background:var(--panel-dark); border-radius:10px; padding:14px; margin-top:14px;"></div>
+    </div>
+  </div>
+
+  <div id="cfo-overlay" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:65; display:flex; align-items:center; justify-content:center; padding:16px;">
+    <div class="panel panel-wide" style="max-width:600px; width:100%; max-height:88vh; overflow-y:auto; display:flex; flex-direction:column;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+        <div>
+          <div class="eyebrow">💼 MOCK CFO INTERVIEW</div>
+          <h2 class="panel-title" style="margin-top:6px;">Practice with the CFO</h2>
+        </div>
+        <button class="ghost-btn" id="cfo-close-btn">Close</button>
+      </div>
+      <p class="fineprint" style="margin-top:6px;">Answer like it's the real meeting. The CFO will push back on weak answers.</p>
+
+      <div id="cfo-transcript" style="max-height:340px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; margin:12px 0; font-size:13px;"></div>
+      <div id="cfo-thinking" style="display:none; font-size:12px; color:var(--muted); font-style:italic; margin-bottom:8px;">The CFO is thinking…</div>
+
+      <textarea id="cfo-answer-input" class="text" rows="2" style="width:100%; margin-bottom:8px;" placeholder="Type your answer…"></textarea>
+      <div style="display:flex; gap:8px;">
+        <button class="confirm-btn" id="cfo-send-btn" style="flex:1;">Answer</button>
+        <button class="ghost-btn" id="cfo-restart-btn" style="flex-shrink:0;">Restart</button>
+      </div>
     </div>
   </div>
 
@@ -2527,6 +2556,73 @@
       btn.disabled = false;
       btn.textContent = "🗑 Wipe all member chat messages";
     }
+  });
+
+  // ================= MOCK CFO INTERVIEW (Gemini-backed, unlimited questions) =================
+  let cfoHistory = []; // [{role:"cfo"|"you", text:"..."}]
+  let cfoBusy = false;
+
+  document.getElementById("cfo-open-btn").addEventListener("click", ()=>{
+    document.getElementById("cfo-overlay").classList.remove("hidden");
+    if (cfoHistory.length === 0) cfoAskNext();
+  });
+  document.getElementById("cfo-close-btn").addEventListener("click", ()=>{
+    document.getElementById("cfo-overlay").classList.add("hidden");
+  });
+  document.getElementById("cfo-restart-btn").addEventListener("click", ()=>{
+    cfoHistory = [];
+    document.getElementById("cfo-transcript").innerHTML = "";
+    cfoAskNext();
+  });
+
+  function cfoAddLine(who, cls, text){
+    const el = document.getElementById("cfo-transcript");
+    const div = document.createElement("div");
+    div.style.cssText = "padding:8px 10px; border-radius:8px; " + (cls==="you" ? "background:rgba(255,255,255,0.06);" : "background:rgba(255,255,255,0.03);");
+    div.innerHTML = `<div style="font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--gold); margin-bottom:3px;">${escapeHtml(who)}</div>${escapeHtml(text)}`;
+    el.appendChild(div);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  async function cfoCallApi(){
+    const resp = await fetch("/api/cfo-interview", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ history: cfoHistory })
+    });
+    const data = await resp.json();
+    if (!data.text) throw new Error(data.error || "no response");
+    return data.text;
+  }
+
+  async function cfoAskNext(){
+    if (cfoBusy) return;
+    cfoBusy = true;
+    document.getElementById("cfo-thinking").style.display = "block";
+    document.getElementById("cfo-send-btn").disabled = true;
+    try {
+      const reply = await cfoCallApi();
+      cfoHistory.push({ role:"cfo", text: reply });
+      cfoAddLine("CFO", "cfo", reply);
+    } catch(e){
+      console.error(e);
+      cfoAddLine("Note", "cfo", "(That didn't come through — try Restart if this keeps happening.)");
+    } finally {
+      document.getElementById("cfo-thinking").style.display = "none";
+      document.getElementById("cfo-send-btn").disabled = false;
+      cfoBusy = false;
+    }
+  }
+
+  document.getElementById("cfo-send-btn").addEventListener("click", async ()=>{
+    if (cfoBusy) return;
+    const input = document.getElementById("cfo-answer-input");
+    const answer = input.value.trim();
+    if (!answer) return;
+    cfoHistory.push({ role:"you", text: answer });
+    cfoAddLine("You", "you", answer);
+    input.value = "";
+    await cfoAskNext();
   });
 
   // ================= THE PREP ROOM (simple prep advice) =================
